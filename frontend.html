@@ -1,16 +1,66 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Face Authentication</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>Smart Event Venue Booking</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h2>Face Authentication Login</h2>
 
-    <form method="POST" enctype="multipart/form-data">
-        <label>Upload Face Image:</label><br><br>
-        <input type="file" name="face" required><br><br>
-        <button type="submit">Verify Face</button>
-    </form>
+<h1>Smart Event Venue Booking System</h1>
+
+<!-- USER MODULE -->
+<section class="box">
+    <h2>👤 User Module</h2>
+    <input type="text" id="username" placeholder="Enter Username">
+    <button onclick="login()">Login</button>
+    <p id="welcome"></p>
+</section>
+
+<!-- PROFILE -->
+<section class="box" id="profileSection" style="display:none;">
+    <h2>👤 Profile Page</h2>
+    <p><b>Username:</b> <span id="profileName"></span></p>
+    <p><b>Total Bookings:</b> <span id="totalBookings">0</span></p>
+    <div id="profileBookings"></div>
+    <button onclick="logout()">Logout</button>
+</section>
+
+<!-- PRICE FILTER -->
+<section class="box price-box">
+    <h2>Price</h2>
+
+    <div class="price-inputs">
+        <span>₹</span>
+        <input type="number" id="minPrice" value="25000">
+        <span>to</span>
+        <span>₹</span>
+        <input type="number" id="maxPrice" value="25000">
+    </div>
+
+    <input type="range" id="priceRange" min="25000" max="100000" step="5000" value="25000">
+
+    <button class="find-btn" onclick="filterVenues()">Find Venues</button>
+</section>
+
+<!-- VENUE LIST -->
+<section class="box">
+    <h2>🏢 Venue Listing</h2>
+    <div id="venueList"></div>
+</section>
+
+
+
+<!-- BOOKING -->
+<section class="box">
+    <h2>🛒 Booking System</h2>
+    <select id="venueSelect"></select>
+    <input type="date" id="date">
+    <input type="text" id="eventType" placeholder="Event Type">
+    <button onclick="checkAvailability()">Check Availability</button>
+    <button onclick="confirmBooking()">Confirm Booking</button>
+    <div id="bookingHistory"></div>
+</section>
+
+<script src="script.js"></script>
 </body>
 </html>
