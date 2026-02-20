@@ -1,31 +1,93 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f6f8;
+    font-family: Arial;
+    background: linear-gradient(to right, #667eea, #764ba2);
     text-align: center;
-    padding-top: 80px;
+    margin: 0;
+    padding: 0;
 }
 
-h2 {
-    color: #2c3e50;
+h1 {
+    background: #222;
+    color: white;
+    padding: 15px;
 }
 
-form {
+.box {
     background: white;
-    padding: 30px;
-    width: 300px;
-    margin: auto;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+/* PRICE FILTER STYLE */
+
+.price-box {
+    text-align: left;
+    max-width: 600px;
+}
+
+.price-box h2 {
+    margin-bottom: 15px;
+}
+
+.price-inputs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.price-inputs input {
+    width: 120px;
+    padding: 8px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+
+#priceRange {
+    width: 100%;
+    margin: 15px 0;
+    accent-color: #2ecc71; /* Green slider */
+}
+
+.find-btn {
+    width: 100%;
+    background: #ff7a00;
+    font-size: 18px;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.find-btn:hover {
+    background: #e56b00;
+}
+
+.card {
+    display: inline-block;
+    width: 250px;
+    background: #f9f9f9;
+    margin: 10px;
+    padding: 15px;
+    border-radius: 10px;
 }
 
 button {
-    padding: 10px 20px;
-    background-color: #3498db;
+    padding: 8px 12px;
+    margin: 5px;
+    background: #4CAF50;
     color: white;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #2980b9;
+    background: #45a049;
+}
+
+input, select {
+    padding: 8px;
+    margin: 5px;
 }
