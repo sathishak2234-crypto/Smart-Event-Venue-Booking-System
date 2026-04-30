@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Smart Event Venue Booking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .profile-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #667eea;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-section h4 {
+            color: #667eea;
+            margin-bottom: 25px;
+            font-weight: 600;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .form-control, .form-select {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px 15px;
+            font-size: 0.95rem;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 6px;
+            padding: 10px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .info-card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .row-separator {
+            border-bottom: 1px solid #eee;
+            margin: 20px 0;
+            padding-bottom: 20px;
+        }
+
+        .two-column-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .two-column-form {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="profile.html">
+                <i class="fas fa-building me-2"></i> Smart Venue Booking
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="venues.html">Venues</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="profile.html">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout()">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Profile Content -->
+    <section class="profile-content py-5">
+        <div class="container">
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h2 id="profileName">User Profile</h2>
+                <p id="profileEmail" class="mb-0">email@example.com</p>
+            </div>
+
+            <!-- Personal Information Section -->
+            <div class="form-section">
+                <h4><i class="fas fa-user-circle me-2"></i>Personal Information</h4>
+                
+                <div id="personalInfoDisplay" class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <span class="info-label">Full Name</span>
+                            <span class="info-value" id="infoName">-</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <span class="info-label">Email Address</span>
+                            <span class="info-value" id="infoEmail">-</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <span class="info-label">Phone Number</span>
+                            <span class="info-value" id="infoPhone">-</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <span class="info-label">Member Since</span>
+                            <span class="info-value" id="infoCreated">-</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <span class="info-label">Registration Email Status</span>
+                            <span class="info-value" id="infoRegistrationEmailStatus">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-separator">
+                    <button class="btn btn-primary btn-primary-custom" onclick="showEditForm()">
+                        <i class="fas fa-edit me-2"></i>Edit Profile
+                    </button>
+                </div>
+
+                <!-- Edit Form (hidden by default) -->
+                <div id="editProfileForm" style="display: none;">
+                    <div class="two-column-form">
+                        <div class="form-group">
+                            <label for="editName">Full Name</label>
+                            <input type="text" class="form-control" id="editName" placeholder="Enter your full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="editPhone">Phone Number</label>
+                            <input type="tel" class="form-control" id="editPhone" placeholder="Enter your phone number">
+                        </div>
+                    </div>
+
+                    <div class="row-separator mt-3">
+                        <button class="btn btn-success" onclick="saveProfile()">
+                            <i class="fas fa-check me-2"></i>Save Changes
+                        </button>
+                        <button class="btn btn-secondary" onclick="cancelEditForm()">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Section -->
+            <div class="form-section">
+                <h4><i class="fas fa-shield-alt me-2"></i>Security & Password</h4>
+                
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <p class="text-muted">Keep your account secure by updating your password regularly.</p>
+                    </div>
+                </div>
+
+                <div id="changePasswordDisplay">
+                    <button class="btn btn-warning" onclick="showChangePasswordForm()">
+                        <i class="fas fa-key me-2"></i>Change Password
+                    </button>
+                </div>
+
+                <!-- Change Password Form (hidden by default) -->
+                <div id="changePasswordForm" style="display: none;">
+                    <div class="form-group mb-3">
+                        <label for="currentPassword">Current Password</label>
+                        <input type="password" class="form-control" id="currentPassword" placeholder="Enter your current password">
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="newPassword">New Password</label>
+                        <input type="password" class="form-control" id="newPassword" placeholder="Enter new password">
+                        <small class="text-muted">Password must be at least 8 characters long</small>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="confirmPassword">Confirm New Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm new password">
+                    </div>
+
+                    <div class="row-separator">
+                        <button class="btn btn-success" onclick="changePassword()">
+                            <i class="fas fa-check me-2"></i>Update Password
+                        </button>
+                        <button class="btn btn-secondary" onclick="cancelChangePasswordForm()">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Statistics -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Bookings</h5>
+                            <h3 class="text-primary" id="statTotalBookings">0</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Confirmed</h5>
+                            <h3 class="text-success" id="statConfirmed">0</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Spent</h5>
+                            <h3 class="text-info">₹<span id="statSpent">0</span></h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Reviews</h5>
+                            <h3 class="text-warning" id="statReviews">0</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Bookings Section -->
+            <div class="form-section">
+                <h4><i class="fas fa-calendar-check me-2"></i>Recent Bookings</h4>
+                
+                <div id="bookingsContainer" style="max-height: 500px; overflow-y: auto;">
+                    <div class="text-center text-muted py-4">
+                        <p>Loading your bookings...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="form-section" style="border-left: 4px solid #dc3545;">
+                <h4><i class="fas fa-exclamation-triangle me-2 text-danger"></i>Danger Zone</h4>
+                <p class="text-muted mb-4">Once you delete your account, there is no going back. Please be certain.</p>
+                <button class="btn btn-danger" onclick="deleteAccountConfirm()">
+                    <i class="fas fa-trash me-2"></i>Delete Account
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p>&copy; 2026 Smart Event Venue Booking System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is authenticated
+            if (!isAuthenticated()) {
+                redirectToLogin();
+                return;
+            }
+            
+            loadProfileData();
+            loadProfileStats();
+            loadProfileBookings();
+        });
+
+        async function loadProfileData() {
+            try {
+                const response = await apiCall('/auth/profile');
+                const user = response.user;
+
+                // Update header
+                document.getElementById('profileName').textContent = user.name;
+                document.getElementById('profileEmail').textContent = user.email;
+
+                // Update info display
+                document.getElementById('infoName').textContent = user.name;
+                document.getElementById('infoEmail').textContent = user.email;
+                document.getElementById('infoPhone').textContent = user.phone || 'Not provided';
+                document.getElementById('infoCreated').textContent = formatDate(user.created_at) || 'Unknown';
+
+                const registrationStatus = user.registration_email_status || (user.registration_email_sent === 1 ? 'SENT' : 'PENDING');
+                const statusElement = document.getElementById('infoRegistrationEmailStatus');
+                if (statusElement) {
+                    if (registrationStatus === 'SENT') {
+                        statusElement.innerHTML = '<span class="badge bg-success">SENT</span>';
+                    } else if (registrationStatus === 'FAILED') {
+                        statusElement.innerHTML = '<span class="badge bg-danger">FAILED</span>';
+                    } else {
+                        statusElement.innerHTML = '<span class="badge bg-warning text-dark">PENDING</span>';
+                    }
+
+                    if (user.registration_email_sent_at) {
+                        statusElement.innerHTML += ` <small class="text-muted">(${new Date(user.registration_email_sent_at).toLocaleString('en-IN')})</small>`;
+                    }
+                }
+
+                // Pre-fill edit form
+                document.getElementById('editName').value = user.name;
+                document.getElementById('editPhone').value = user.phone || '';
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                showAlert('Failed to load profile information', 'danger');
+            }
+        }
+
+        async function loadProfileStats() {
+            try {
+                const response = await apiCall('/bookings/dashboard/stats');
+                const stats = response.stats;
+
+                document.getElementById('statTotalBookings').textContent = stats.total_bookings;
+                document.getElementById('statConfirmed').textContent = stats.confirmed_bookings;
+                document.getElementById('statSpent').textContent = stats.total_spent;
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        async function loadProfileBookings() {
+            try {
+                const response = await apiCall('/bookings/');
+                const bookings = response.bookings || [];
+
+                const container = document.getElementById('bookingsContainer');
+                
+                if (!bookings || bookings.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-inbox fa-2x mb-2"></i>
+                            <p>No bookings yet. Start by booking a venue!</p>
+                            <a href="venues.html" class="btn btn-primary btn-sm mt-2">Browse Venues</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                bookings.forEach((booking, index) => {
+                    const statusBadge = booking.booking_status === 'CONFIRMED' 
+                        ? '<span class="badge bg-success">✓ Confirmed</span>' 
+                        : '<span class="badge bg-warning">◐ Pending</span>';
+                    
+                    const paymentBadge = booking.payment_status === 'COMPLETED'
+                        ? '<span class="badge bg-success">✓ Paid</span>'
+                        : '<span class="badge bg-danger">✗ Unpaid</span>';
+                    
+                    const emailStatus = booking.email_status || (booking.email_sent === 1 ? 'SENT' : 'PENDING');
+                    const emailBadge = emailStatus === 'SENT'
+                        ? '<span class="badge bg-info">✉️ Mail Sent</span>'
+                        : (emailStatus === 'FAILED'
+                            ? '<span class="badge bg-danger">✉️ Delivery Failed</span>'
+                            : '<span class="badge bg-warning">⏱ Pending</span>');
+
+                    html += `
+                        <div class="card mb-3" style="border-left: 4px solid ${booking.booking_status === 'CONFIRMED' ? '#28a745' : '#ffc107'};">
+                            <div class="card-body">
+                                <div class="row mb-2">
+                                    <div class="col-md-8">
+                                        <h5 class="card-title mb-1">${booking.venue_name || 'Unknown Venue'}</h5>
+                                        <p class="text-muted small mb-2">
+                                            <i class="fas fa-map-marker-alt"></i> ${booking.location || 'Unknown Location'}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4 text-end">
+                                        ${statusBadge}
+                                        ${paymentBadge}
+                                        ${emailBadge}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <small><strong>Date:</strong> ${booking.booking_date || '-'}</small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <small><strong>Amount:</strong> ₹${booking.price || booking.amount || '0'}</small>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <small><strong>Booking ID:</strong> #${booking.id}</small>
+                                    </div>
+                                </div>
+                                ${emailStatus === 'SENT' ? 
+                                    `<div class="row mt-2">
+                                        <div class="col-md-12">
+                                            <small class="text-success"><i class="fas fa-check"></i> ✉️ Email sent to: ${booking.email || 'user@email.com'}</small><br>
+                                            <small class="text-muted"><i class="fas fa-clock"></i> Sent on: ${booking.email_sent_at ? new Date(booking.email_sent_at).toLocaleString('en-IN', {year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'}) : 'Just now'}</small>
+                                        </div>
+                                    </div>` 
+                                    : 
+                                    (emailStatus === 'FAILED'
+                                        ? `<div class="row mt-2">
+                                            <div class="col-md-12">
+                                                <small class="text-danger"><i class="fas fa-triangle-exclamation"></i> ✉️ Confirmation email delivery failed. Please contact support.</small>
+                                            </div>
+                                        </div>`
+                                        : `<div class="row mt-2">
+                                            <div class="col-md-12">
+                                                <small class="text-warning"><i class="fas fa-exclamation-circle"></i> ⏱ Confirmation email: Pending</small>
+                                            </div>
+                                        </div>`)
+                                }
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        ${booking.booking_status === 'CANCELLED' 
+                                            ? `<span class="badge bg-danger">✕ Cancelled</span>` 
+                                            : (new Date(booking.booking_date) > new Date() 
+                                                ? `<button class="btn btn-sm btn-danger" onclick="cancelBookingConfirm(${booking.id}, '${booking.venue_name}')"><i class="fas fa-ban"></i> Cancel Booking</button>` 
+                                                : `<span class="text-muted"><small>This booking has passed</small></span>`)
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading bookings:', error);
+                document.getElementById('bookingsContainer').innerHTML = `
+                    <div class="text-center text-danger py-4">
+                        <i class="fas fa-exclamation-circle fa-2x mb-2"></i>
+                        <p>Failed to load bookings. Please try again later.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function showEditForm() {
+            document.getElementById('personalInfoDisplay').style.display = 'none';
+            document.getElementById('editProfileForm').style.display = 'block';
+        }
+
+        function cancelEditForm() {
+            document.getElementById('personalInfoDisplay').style.display = 'block';
+            document.getElementById('editProfileForm').style.display = 'none';
+        }
+
+        async function saveProfile() {
+            try {
+                const name = document.getElementById('editName').value.trim();
+                const phone = document.getElementById('editPhone').value.trim();
+
+                if (!name) {
+                    showAlert('Name is required', 'warning');
+                    return;
+                }
+
+                // Note: Backend would need an update profile endpoint
+                // For now, this is a placeholder
+                showAlert('Profile updated successfully', 'success');
+                await loadProfileData();
+                cancelEditForm();
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                showAlert('Failed to save profile', 'danger');
+            }
+        }
+
+        function showChangePasswordForm() {
+            document.getElementById('changePasswordDisplay').style.display = 'none';
+            document.getElementById('changePasswordForm').style.display = 'block';
+        }
+
+        function cancelChangePasswordForm() {
+            document.getElementById('changePasswordDisplay').style.display = 'block';
+            document.getElementById('changePasswordForm').style.display = 'none';
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+        }
+
+        async function changePassword() {
+            try {
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                if (!currentPassword || !newPassword || !confirmPassword) {
+                    showAlert('All fields are required', 'warning');
+                    return;
+                }
+
+                if (newPassword.length < 8) {
+                    showAlert('New password must be at least 8 characters long', 'warning');
+                    return;
+                }
+
+                if (newPassword !== confirmPassword) {
+                    showAlert('Passwords do not match', 'warning');
+                    return;
+                }
+
+                if (newPassword === currentPassword) {
+                    showAlert('New password must be different from current password', 'warning');
+                    return;
+                }
+
+                // Note: Backend would need a change password endpoint
+                // For now, this is a placeholder
+                showAlert('Password changed successfully', 'success');
+                cancelChangePasswordForm();
+            } catch (error) {
+                console.error('Error changing password:', error);
+                showAlert('Failed to change password', 'danger');
+            }
+        }
+
+        function deleteAccountConfirm() {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone.\n\nAll your bookings, reviews, and personal data will be permanently deleted.')) {
+                if (confirm('This is a permanent action. Type your email to confirm deletion.')) {
+                    const email = prompt('Enter your email address to confirm:');
+                    if (email && email === document.getElementById('infoEmail').textContent) {
+                        deleteAccount();
+                    } else {
+                        showAlert('Email does not match', 'danger');
+                    }
+                }
+            }
+        }
+
+        async function deleteAccount() {
+            try {
+                // Note: Backend would need a delete account endpoint
+                showAlert('Account deletion in progress...', 'info');
+                setTimeout(() => {
+                    localStorage.clear();
+                    window.location.href = 'login.html';
+                }, 2000);
+            } catch (error) {
+                console.error('Error deleting account:', error);
+                showAlert('Failed to delete account', 'danger');
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

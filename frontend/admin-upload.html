@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Upload Venue Images</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .upload-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .drop-zone {
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f0f2ff;
+        }
+        .drop-zone:hover {
+            background: #e8ebff;
+            border-color: #764ba2;
+        }
+        .drop-zone.dragover {
+            background: #e8ebff;
+            border-color: #764ba2;
+        }
+        .preview-container {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        .preview-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .preview-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        .preview-item .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #dc3545;
+            border: none;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .upload-info {
+            background: #e7f3ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .success-message {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            color: #155724;
+        }
+        .error-message {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            color: #721c24;
+        }
+        .venue-selector {
+            margin-bottom: 20px;
+        }
+        .image-url-display {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            word-break: break-all;
+            margin-top: 10px;
+        }
+        .copy-btn {
+            padding: 5px 10px;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="profile.html">
+                <i class="fas fa-building me-2"></i> Smart Venue Booking - Admin
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="admin-dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="admin-upload.html">Upload Images</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout()">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1 class="mb-4"><i class="fas fa-images me-2"></i>Venue Image Management</h1>
+
+        <!-- Messages -->
+        <div id="successMessage" class="success-message" style="display: none;"></div>
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+        <!-- Upload Info -->
+        <div class="upload-info">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong>How to use:</strong> Select a venue, upload images (main image and thumbnail), and get the image URLs to store in database.
+        </div>
+
+        <!-- Venue Selection -->
+        <div class="upload-section">
+            <h3 class="mb-3"><i class="fas fa-list me-2"></i>Step 1: Select Venue</h3>
+            <select id="venueSelect" class="form-select form-select-lg mb-3">
+                <option value="">-- Select a Venue --</option>
+            </select>
+            <button class="btn btn-info" onclick="loadVenueDetails()">
+                <i class="fas fa-search me-2"></i>Load Venue Details
+            </button>
+        </div>
+
+        <!-- Venue Details Display -->
+        <div id="venueDetailsDiv" class="upload-section" style="display: none;">
+            <h4 class="mb-3">Current Venue Details</h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Name:</strong> <span id="venueName"></span></p>
+                    <p><strong>Location:</strong> <span id="venueLocation"></span></p>
+                    <p><strong>Capacity:</strong> <span id="venueCapacity"></span></p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Price:</strong> ₹<span id="venuePrice"></span></p>
+                    <p><strong>Current Main Image:</strong> <span id="currentMainImage">No image</span></p>
+                    <p><strong>Current Thumbnail:</strong> <span id="currentThumbnail">No image</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Image Upload -->
+        <div class="upload-section">
+            <h3 class="mb-3"><i class="fas fa-image me-2"></i>Step 2: Upload Main Image</h3>
+            <small class="text-muted d-block mb-3">Recommended size: 600x400px or larger</small>
+            
+            <div class="drop-zone" id="mainImageDropZone">
+                <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                <p><strong>Drag and drop your main image here</strong></p>
+                <p class="text-muted">or click to select from computer</p>
+                <input type="file" id="mainImageUpload" accept="image/*" style="display: none;">
+            </div>
+
+            <div class="preview-container" id="mainImagePreview"></div>
+
+            <div id="mainImageUrlDiv" style="display: none; margin-top: 15px;">
+                <strong>Main Image URL:</strong>
+                <div class="image-url-display">
+                    <span id="mainImageUrl"></span>
+                </div>
+                <button class="btn btn-sm btn-outline-primary copy-btn mt-2" onclick="copyToClipboard('mainImageUrl')">
+                    <i class="fas fa-copy me-1"></i>Copy URL
+                </button>
+            </div>
+
+            <button id="uploadMainBtn" class="btn btn-primary mt-3" style="display: none;">
+                <i class="fas fa-upload me-2"></i>Upload Main Image
+            </button>
+            <div id="mainImageStatus" class="mt-2"></div>
+        </div>
+
+        <!-- Thumbnail Upload -->
+        <div class="upload-section">
+            <h3 class="mb-3"><i class="fas fa-th-large me-2"></i>Step 3: Upload Thumbnail</h3>
+            <small class="text-muted d-block mb-3">Recommended size: 300x200px (smaller than main image)</small>
+            
+            <div class="drop-zone" id="thumbDropZone">
+                <i class="fas fa-cloud-upload-alt fa-3x text-success mb-3"></i>
+                <p><strong>Drag and drop your thumbnail image here</strong></p>
+                <p class="text-muted">or click to select from computer</p>
+                <input type="file" id="thumbUpload" accept="image/*" style="display: none;">
+            </div>
+
+            <div class="preview-container" id="thumbPreview"></div>
+
+            <div id="thumbUrlDiv" style="display: none; margin-top: 15px;">
+                <strong>Thumbnail URL:</strong>
+                <div class="image-url-display">
+                    <span id="thumbUrl"></span>
+                </div>
+                <button class="btn btn-sm btn-outline-primary copy-btn mt-2" onclick="copyToClipboard('thumbUrl')">
+                    <i class="fas fa-copy me-1"></i>Copy URL
+                </button>
+            </div>
+
+            <button id="uploadThumbBtn" class="btn btn-success mt-3" style="display: none;">
+                <i class="fas fa-upload me-2"></i>Upload Thumbnail
+            </button>
+            <div id="thumbStatus" class="mt-2"></div>
+        </div>
+
+        <!-- Update Venue -->
+        <div class="upload-section">
+            <h3 class="mb-3"><i class="fas fa-check-square me-2"></i>Step 4: Update Database</h3>
+            <p class="text-muted">Once you have the image URLs, click the button below to save them to the database.</p>
+            <button id="updateVenueBtn" class="btn btn-lg btn-success" onclick="updateVenueWithImages()">
+                <i class="fas fa-save me-2"></i>Save Images to Database
+            </button>
+            <div id="updateStatus" class="mt-2"></div>
+        </div>
+
+        <!-- Copy Instructions -->
+        <div class="alert alert-info mt-4">
+            <h5><i class="fas fa-lightbulb me-2"></i>Quick Instructions</h5>
+            <ol>
+                <li>Select a venue from the dropdown</li>
+                <li>Upload a main image (larger image for detail page)</li>
+                <li>Upload a thumbnail image (smaller image for listings)</li>
+                <li>Copy the generated URLs</li>
+                <li>Click "Save Images to Database" to update the venue</li>
+            </ol>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        let selectedVenueId = null;
+        let mainImageFile = null;
+        let thumbImageFile = null;
+        let mainImageUrl = null;
+        let thumbImageUrl = null;
+
+        // Load venues on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdminAuth();
+            loadVenues();
+            setupDropZones();
+        });
+
+        function checkAdminAuth() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+            // Could add additional admin check here
+        }
+
+        async function loadVenues() {
+            try {
+                const response = await apiCall('/venues/');
+                const venueSelect = document.getElementById('venueSelect');
+                
+                if (response.venues && response.venues.length > 0) {
+                    response.venues.forEach(venue => {
+                        const option = document.createElement('option');
+                        option.value = venue.id;
+                        option.textContent = `${venue.venue_name} (${venue.location})`;
+                        venueSelect.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                showError('Failed to load venues: ' + error.message);
+            }
+        }
+
+        function loadVenueDetails() {
+            selectedVenueId = document.getElementById('venueSelect').value;
+            if (!selectedVenueId) {
+                showError('Please select a venue');
+                return;
+            }
+
+            const venues = JSON.parse(sessionStorage.getItem('venues') || '[]');
+            // Reload venues to get details
+            fetch('/api/venues/')
+                .then(r => r.json())
+                .then(data => {
+                    const venue = data.venues.find(v => v.id == selectedVenueId);
+                    if (venue) {
+                        document.getElementById('venueName').textContent = venue.venue_name;
+                        document.getElementById('venueLocation').textContent = venue.location;
+                        document.getElementById('venueCapacity').textContent = venue.capacity;
+                        document.getElementById('venuePrice').textContent = venue.price;
+                        document.getElementById('currentMainImage').textContent = venue.image_url || 'No image';
+                        document.getElementById('currentThumbnail').textContent = venue.thumbnail_url || 'No image';
+                        document.getElementById('venueDetailsDiv').style.display = 'block';
+                    }
+                });
+        }
+
+        function setupDropZones() {
+            setupDropZone('mainImageDropZone', 'mainImageUpload', 'main');
+            setupDropZone('thumbDropZone', 'thumbUpload', 'thumb');
+        }
+
+        function setupDropZone(zoneId, inputId, type) {
+            const dropZone = document.getElementById(zoneId);
+            const fileInput = document.getElementById(inputId);
+
+            dropZone.addEventListener('click', () => fileInput.click());
+
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFileSelect(files[0], type);
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleFileSelect(e.target.files[0], type);
+                }
+            });
+        }
+
+        function handleFileSelect(file, type) {
+            if (!file.type.startsWith('image/')) {
+                showError('Please select an image file');
+                return;
+            }
+
+            if (type === 'main') {
+                mainImageFile = file;
+                showPreview(file, 'mainImagePreview', type);
+                document.getElementById('uploadMainBtn').style.display = 'block';
+            } else {
+                thumbImageFile = file;
+                showPreview(file, 'thumbPreview', type);
+                document.getElementById('uploadThumbBtn').style.display = 'block';
+            }
+        }
+
+        function showPreview(file, previewId, type) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const preview = document.getElementById(previewId);
+                preview.innerHTML = `
+                    <div class="preview-item">
+                        <img src="${e.target.result}" alt="Preview">
+                        <button class="remove-btn" onclick="removePreview('${previewId}', '${type}')">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removePreview(previewId, type) {
+            document.getElementById(previewId).innerHTML = '';
+            if (type === 'main') {
+                mainImageFile = null;
+                document.getElementById('uploadMainBtn').style.display = 'none';
+                mainImageUrl = null;
+                document.getElementById('mainImageUrlDiv').style.display = 'none';
+            } else {
+                thumbImageFile = null;
+                document.getElementById('uploadThumbBtn').style.display = 'none';
+                thumbImageUrl = null;
+                document.getElementById('thumbUrlDiv').style.display = 'none';
+            }
+        }
+
+        async function uploadMainImage() {
+            if (!mainImageFile) {
+                showError('Please select an image');
+                return;
+            }
+
+            await uploadImage(mainImageFile, 'upload-image', 'mainImageStatus', 'mainImageUrl', 'mainImageUrlDiv', 'main');
+        }
+
+        async function uploadThumbnail() {
+            if (!thumbImageFile) {
+                showError('Please select a thumbnail');
+                return;
+            }
+
+            await uploadImage(thumbImageFile, 'upload-thumbnail', 'thumbStatus', 'thumbUrl', 'thumbUrlDiv', 'thumb');
+        }
+
+        async function uploadImage(file, endpoint, statusId, urlId, urlDivId, type) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`/api/admin/${endpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+                const statusDiv = document.getElementById(statusId);
+
+                if (response.ok) {
+                    if (type === 'main') {
+                        mainImageUrl = data.image_url;
+                    } else {
+                        thumbImageUrl = data.thumbnail_url;
+                    }
+                    
+                    document.getElementById(urlId).textContent = data.image_url || data.thumbnail_url;
+                    document.getElementById(urlDivId).style.display = 'block';
+                    statusDiv.innerHTML = '<div class="alert alert-success"><i class="fas fa-check"></i> Uploaded successfully!</div>';
+                    showSuccess('Image uploaded successfully!');
+                } else {
+                    statusDiv.innerHTML = `<div class="alert alert-danger"><i class="fas fa-times"></i> ${data.error}</div>`;
+                    showError('Upload failed: ' + data.error);
+                }
+            } catch (error) {
+                document.getElementById(statusId).innerHTML = `<div class="alert alert-danger"><i class="fas fa-times"></i> ${error.message}</div>`;
+                showError('Upload error: ' + error.message);
+            }
+        }
+
+        async function updateVenueWithImages() {
+            if (!selectedVenueId) {
+                showError('Please select a venue');
+                return;
+            }
+
+            if (!mainImageUrl || !thumbImageUrl) {
+                showError('Please upload both main image and thumbnail');
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`/api/admin/venues/${selectedVenueId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        image_url: mainImageUrl,
+                        thumbnail_url: thumbImageUrl
+                    })
+                });
+
+                if (response.ok) {
+                    showSuccess('Venue images updated successfully!');
+                    document.getElementById('updateStatus').innerHTML = '<div class="alert alert-success"><i class="fas fa-check"></i> Venue updated!</div>';
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    const data = await response.json();
+                    showError('Update failed: ' + data.error);
+                }
+            } catch (error) {
+                showError('Error updating venue: ' + error.message);
+            }
+        }
+
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                showSuccess('URL copied to clipboard!');
+            });
+        }
+
+        function showSuccess(message) {
+            const div = document.getElementById('successMessage');
+            div.textContent = message;
+            div.style.display = 'block';
+            setTimeout(() => {
+                div.style.display = 'none';
+            }, 4000);
+        }
+
+        function showError(message) {
+            const div = document.getElementById('errorMessage');
+            div.textContent = message;
+            div.style.display = 'block';
+            setTimeout(() => {
+                div.style.display = 'none';
+            }, 4000);
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        }
+
+        // Add onclick handlers for upload buttons
+        document.getElementById('uploadMainBtn').onclick = uploadMainImage;
+        document.getElementById('uploadThumbBtn').onclick = uploadThumbnail;
+    </script>
+</body>
+</html>

@@ -1,0 +1,712 @@
+
+======================================================================
+Timestamp: 2026-03-26 13:10:01
+To: srinivasalagu2004@gmail.com
+Subject: Booking Confirmed - PLP Palace Wedding Hall
+From: sathishak2234@gmail.com
+======================================================================
+
+    <html>
+        <body>
+            <h2>Booking Confirmation</h2>
+            <p>Dear Srinivasan,</p>
+            <p>Your booking has been confirmed!</p>
+            <br>
+            <h3>Booking Details:</h3>
+            <table style="border-collapse: collapse; width: 100%;">
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Venue Name:</strong></td>
+                    <td style="padding: 8px;">PLP Palace Wedding Hall</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Location:</strong></td>
+                    <td style="padding: 8px;">Ananda Nagar</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Booking Date:</strong></td>
+                    <td style="padding: 8px;">2026-04-01</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Amount:</strong></td>
+                    <td style="padding: 8px;">₹85000</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Payment Status:</strong></td>
+                    <td style="padding: 8px;">COMPLETED</td>
+                </tr>
+            </table>
+            <br>
+            <p>Thank you for booking with us!</p>
+            <p>Best regards,<br>Smart Event Venue Booking Team</p>
+        </body>
+    </html>
+    
+
+======================================================================
+Timestamp: 2026-03-26 13:29:37
+Type: booking
+To: srinivasalagu2004@gmail.com
+Subject: Booking Confirmed - KVS Mahal
+From: sathishak2234@gmail.com
+======================================================================
+
+    <html>
+        <body>
+            <h2>Booking Confirmation</h2>
+            <p>Dear Srinivasan,</p>
+            <p>Your booking has been confirmed!</p>
+            <br>
+            <h3>Booking Details:</h3>
+            <table style="border-collapse: collapse; width: 100%;">
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Venue Name:</strong></td>
+                    <td style="padding: 8px;">KVS Mahal</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Location:</strong></td>
+                    <td style="padding: 8px;">Ariyakudi Main Road</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Booking Date:</strong></td>
+                    <td style="padding: 8px;">2026-04-03</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Amount:</strong></td>
+                    <td style="padding: 8px;">₹55000</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Payment Status:</strong></td>
+                    <td style="padding: 8px;">COMPLETED</td>
+                </tr>
+            </table>
+            <br>
+            <p>Thank you for booking with us!</p>
+            <p>Best regards,<br>Smart Event Venue Booking Team</p>
+        </body>
+    </html>
+    
+
+======================================================================
+Timestamp: 2026-03-26 13:42:42
+Type: booking
+To: sathishkannappan1234@gmail.com
+Subject: Booking Confirmed - Subhalakshmi Mahal
+From: sathishak2234@gmail.com
+======================================================================
+
+    <html>
+        <body>
+            <h2>Booking Confirmation</h2>
+            <p>Dear Sakthi,</p>
+            <p>Your booking has been confirmed!</p>
+            <br>
+            <h3>Booking Details:</h3>
+            <table style="border-collapse: collapse; width: 100%;">
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Venue Name:</strong></td>
+                    <td style="padding: 8px;">Subhalakshmi Mahal</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Location:</strong></td>
+                    <td style="padding: 8px;">TT Nagar, Sekkalai</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Booking Date:</strong></td>
+                    <td style="padding: 8px;">2026-04-04</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Amount:</strong></td>
+                    <td style="padding: 8px;">₹60000</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Payment Status:</strong></td>
+                    <td style="padding: 8px;">COMPLETED</td>
+                </tr>
+            </table>
+            <br>
+            <p>Thank you for booking with us!</p>
+            <p>Best regards,<br>Smart Event Venue Booking Team</p>
+        </body>
+    </html>
+    
+
+======================================================================
+Timestamp: 2026-04-16 11:48:00
+Type: booking
+To: skrtamilan7@gmail.com
+Subject: Booking Confirmed - Subhalakshmi Mahal
+From: sathishak2234@gmail.com
+======================================================================
+
+    <html>
+        <body>
+            <h2>Booking Confirmation</h2>
+            <p>Dear Senthilkumar,</p>
+            <p>Your booking has been confirmed!</p>
+            <br>
+            <h3>Booking Details:</h3>
+            <table style="border-collapse: collapse; width: 100%;">
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Venue Name:</strong></td>
+                    <td style="padding: 8px;">Subhalakshmi Mahal</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Location:</strong></td>
+                    <td style="padding: 8px;">TT Nagar, Sekkalai</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Booking Date:</strong></td>
+                    <td style="padding: 8px;">2026-04-17</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Amount:</strong></td>
+                    <td style="padding: 8px;">₹60000</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Payment Status:</strong></td>
+                    <td style="padding: 8px;">COMPLETED</td>
+                </tr>
+            </table>
+            <br>
+            <p>Thank you for booking with us!</p>
+            <p>Best regards,<br>Smart Event Venue Booking Team</p>
+        </body>
+    </html>
+    
+
+======================================================================
+Timestamp: 2026-04-17 15:13:18
+Type: booking
+To: skrtamilan7@gmail.com
+Subject: Booking Confirmed - Subhalakshmi Mahal
+From: sathishak2234@gmail.com
+======================================================================
+
+    <html>
+        <body>
+            <h2>Booking Confirmation</h2>
+            <p>Dear Senthilkumar,</p>
+            <p>Your booking has been confirmed!</p>
+            <br>
+            <h3>Booking Details:</h3>
+            <table style="border-collapse: collapse; width: 100%;">
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Venue Name:</strong></td>
+                    <td style="padding: 8px;">Subhalakshmi Mahal</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Location:</strong></td>
+                    <td style="padding: 8px;">TT Nagar, Sekkalai</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Booking Date:</strong></td>
+                    <td style="padding: 8px;">2026-04-24</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Amount:</strong></td>
+                    <td style="padding: 8px;">₹60000</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Payment Status:</strong></td>
+                    <td style="padding: 8px;">COMPLETED</td>
+                </tr>
+            </table>
+            <br>
+            <p>Thank you for booking with us!</p>
+            <p>Best regards,<br>Smart Event Venue Booking Team</p>
+        </body>
+    </html>
+    
+
+======================================================================
+Timestamp: 2026-04-18 00:46:50
+Type: booking
+To: roshan123@gmail.com
+Subject: Welcome to Smart Event Venue Booking System
+From: sathishak2234@gmail.com
+======================================================================
+
+    <html>
+        <body>
+            <h2>Welcome, Sathish A.K!</h2>
+            <p>Your account has been successfully created.</p>
+            <p><strong>Email:</strong> roshan123@gmail.com</p>
+            <p>You can now login and start booking venues for your events.</p>
+            <br>
+            <p>Best regards,<br>Smart Event Venue Booking Team</p>
+        </body>
+    </html>
+    
+
+======================================================================
+Timestamp: 2026-04-18 00:49:33
+Type: booking
+To: testuser_1776473370@example.com
+Subject: Welcome to Smart Event Venue Booking System
+From: sathishak2234@gmail.com
+======================================================================
+
+    <html>
+        <body>
+            <h2>Welcome, Test User!</h2>
+            <p>Your account has been successfully created.</p>
+            <p><strong>Email:</strong> testuser_1776473370@example.com</p>
+            <p>You can now login and start booking venues for your events.</p>
+            <br>
+            <p>Best regards,<br>Smart Event Venue Booking Team</p>
+        </body>
+    </html>
+    
+
+======================================================================
+Timestamp: 2026-04-18 00:52:25
+Type: booking
+To: fixcheck_1776473542@example.com
+Subject: Welcome to Smart Event Venue Booking System
+From: sathishak2234@gmail.com
+======================================================================
+
+    <html>
+        <body>
+            <h2>Welcome, Fix Check!</h2>
+            <p>Your account has been successfully created.</p>
+            <p><strong>Email:</strong> fixcheck_1776473542@example.com</p>
+            <p>You can now login and start booking venues for your events.</p>
+            <br>
+            <p>Best regards,<br>Smart Event Venue Booking Team</p>
+        </body>
+    </html>
+    
+
+======================================================================
+Timestamp: 2026-04-18 01:47:52
+Type: registration
+To: notify_1776476869@example.com
+Subject: Welcome to Smart Event Venue Booking System
+From: sathishak2234@gmail.com
+======================================================================
+
+    <html>
+        <body>
+            <h2>Welcome, Notify User!</h2>
+            <p>Your account has been successfully created.</p>
+            <p><strong>Email:</strong> notify_1776476869@example.com</p>
+            <p>You can now login and start booking venues for your events.</p>
+            <br>
+            <p>Best regards,<br>Smart Event Venue Booking Team</p>
+        </body>
+    </html>
+    
+
+======================================================================
+Timestamp: 2026-04-18 01:47:55
+Type: booking
+To: notify_1776476869@example.com
+Subject: Booking Confirmed - Subhalakshmi Mahal
+From: sathishak2234@gmail.com
+======================================================================
+
+    <html>
+        <body>
+            <h2>Booking Confirmation</h2>
+            <p>Dear Notify User,</p>
+            <p>Your booking has been confirmed!</p>
+            <br>
+            <h3>Booking Details:</h3>
+            <table style="border-collapse: collapse; width: 100%;">
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Venue Name:</strong></td>
+                    <td style="padding: 8px;">Subhalakshmi Mahal</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Location:</strong></td>
+                    <td style="padding: 8px;">TT Nagar, Sekkalai</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Booking Date:</strong></td>
+                    <td style="padding: 8px;">2026-12-31</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Amount:</strong></td>
+                    <td style="padding: 8px;">₹60000</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Payment Status:</strong></td>
+                    <td style="padding: 8px;">COMPLETED</td>
+                </tr>
+            </table>
+            <br>
+            <p>Thank you for booking with us!</p>
+            <p>Best regards,<br>Smart Event Venue Booking Team</p>
+        </body>
+    </html>
+    
+
+======================================================================
+Timestamp: 2026-04-18 01:47:59
+Type: admin_new_venue
+To: sathishak2234@gmail.com
+Subject: New Venue Registered - Email Notify Hall 1776476869
+From: sathishak2234@gmail.com
+======================================================================
+
+    <html>
+        <body>
+            <h2>New Venue Registered</h2>
+            <p>A new venue has been added to the system.</p>
+            <table style="border-collapse: collapse; width: 100%;">
+                <tr style="border: 1px solid #ddd;"><td style="padding: 8px;"><strong>Venue Name</strong></td><td style="padding: 8px;">Email Notify Hall 1776476869</td></tr>
+                <tr style="border: 1px solid #ddd;"><td style="padding: 8px;"><strong>Location</strong></td><td style="padding: 8px;">Email Test Location</td></tr>
+                <tr style="border: 1px solid #ddd;"><td style="padding: 8px;"><strong>Capacity</strong></td><td style="padding: 8px;">123</td></tr>
+                <tr style="border: 1px solid #ddd;"><td style="padding: 8px;"><strong>Price</strong></td><td style="padding: 8px;">₹12345</td></tr>
+                <tr style="border: 1px solid #ddd;"><td style="padding: 8px;"><strong>Rating</strong></td><td style="padding: 8px;">4.2</td></tr>
+            </table>
+        </body>
+    </html>
+    
+
+======================================================================
+Timestamp: 2026-04-18 01:49:03
+Type: registration
+To: status_1776476940@example.com
+Subject: Welcome to Smart Event Venue Booking System
+From: sathishak2234@gmail.com
+======================================================================
+
+    <html>
+        <body>
+            <h2>Welcome, Status User!</h2>
+            <p>Your account has been successfully created.</p>
+            <p><strong>Email:</strong> status_1776476940@example.com</p>
+            <p>You can now login and start booking venues for your events.</p>
+            <br>
+            <p>Best regards,<br>Smart Event Venue Booking Team</p>
+        </body>
+    </html>
+    
+
+======================================================================
+Timestamp: 2026-04-18 01:49:06
+Type: booking
+To: status_1776476940@example.com
+Subject: Booking Confirmed - PLP Palace Wedding Hall
+From: sathishak2234@gmail.com
+======================================================================
+
+    <html>
+        <body>
+            <h2>Booking Confirmation</h2>
+            <p>Dear Status User,</p>
+            <p>Your booking has been confirmed!</p>
+            <br>
+            <h3>Booking Details:</h3>
+            <table style="border-collapse: collapse; width: 100%;">
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Venue Name:</strong></td>
+                    <td style="padding: 8px;">PLP Palace Wedding Hall</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Location:</strong></td>
+                    <td style="padding: 8px;">Ananda Nagar</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Booking Date:</strong></td>
+                    <td style="padding: 8px;">2026-12-30</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Amount:</strong></td>
+                    <td style="padding: 8px;">₹85000</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Payment Status:</strong></td>
+                    <td style="padding: 8px;">COMPLETED</td>
+                </tr>
+            </table>
+            <br>
+            <p>Thank you for booking with us!</p>
+            <p>Best regards,<br>Smart Event Venue Booking Team</p>
+        </body>
+    </html>
+    
+
+======================================================================
+Timestamp: 2026-04-18 01:49:24
+Type: admin_new_venue
+To: sathishak2234@gmail.com
+Subject: New Venue Registered - Admin Notify Test 1776476962
+From: sathishak2234@gmail.com
+======================================================================
+
+    <html>
+        <body>
+            <h2>New Venue Registered</h2>
+            <p>A new venue has been added to the system.</p>
+            <table style="border-collapse: collapse; width: 100%;">
+                <tr style="border: 1px solid #ddd;"><td style="padding: 8px;"><strong>Venue Name</strong></td><td style="padding: 8px;">Admin Notify Test 1776476962</td></tr>
+                <tr style="border: 1px solid #ddd;"><td style="padding: 8px;"><strong>Location</strong></td><td style="padding: 8px;">Karaikudi</td></tr>
+                <tr style="border: 1px solid #ddd;"><td style="padding: 8px;"><strong>Capacity</strong></td><td style="padding: 8px;">250</td></tr>
+                <tr style="border: 1px solid #ddd;"><td style="padding: 8px;"><strong>Price</strong></td><td style="padding: 8px;">₹21000</td></tr>
+                <tr style="border: 1px solid #ddd;"><td style="padding: 8px;"><strong>Rating</strong></td><td style="padding: 8px;">4.1</td></tr>
+            </table>
+        </body>
+    </html>
+    
+
+======================================================================
+Timestamp: 2026-04-18 01:49:37
+Type: admin_new_venue
+To: sathishak2234@gmail.com
+Subject: New Venue Registered - Admin Notify Test 1776476975
+From: sathishak2234@gmail.com
+======================================================================
+
+    <html>
+        <body>
+            <h2>New Venue Registered</h2>
+            <p>A new venue has been added to the system.</p>
+            <table style="border-collapse: collapse; width: 100%;">
+                <tr style="border: 1px solid #ddd;"><td style="padding: 8px;"><strong>Venue Name</strong></td><td style="padding: 8px;">Admin Notify Test 1776476975</td></tr>
+                <tr style="border: 1px solid #ddd;"><td style="padding: 8px;"><strong>Location</strong></td><td style="padding: 8px;">Karaikudi</td></tr>
+                <tr style="border: 1px solid #ddd;"><td style="padding: 8px;"><strong>Capacity</strong></td><td style="padding: 8px;">250</td></tr>
+                <tr style="border: 1px solid #ddd;"><td style="padding: 8px;"><strong>Price</strong></td><td style="padding: 8px;">₹21000</td></tr>
+                <tr style="border: 1px solid #ddd;"><td style="padding: 8px;"><strong>Rating</strong></td><td style="padding: 8px;">4.1</td></tr>
+            </table>
+        </body>
+    </html>
+    
+
+======================================================================
+Timestamp: 2026-04-18 01:50:35
+Type: registration
+To: smtpcheck_1776477032@example.com
+Subject: Welcome to Smart Event Venue Booking System
+From: sathishak2234@gmail.com
+======================================================================
+
+    <html>
+        <body>
+            <h2>Welcome, SMTP Check!</h2>
+            <p>Your account has been successfully created.</p>
+            <p><strong>Email:</strong> smtpcheck_1776477032@example.com</p>
+            <p>You can now login and start booking venues for your events.</p>
+            <br>
+            <p>Best regards,<br>Smart Event Venue Booking Team</p>
+        </body>
+    </html>
+    
+
+======================================================================
+Timestamp: 2026-04-18 01:53:49
+Type: booking
+To: roshan123@gmail.com
+Subject: Booking Confirmed - PLP Palace Wedding Hall
+From: sathishak2234@gmail.com
+======================================================================
+
+    <html>
+        <body>
+            <h2>Booking Confirmation</h2>
+            <p>Dear Sathish A.K,</p>
+            <p>Your booking has been confirmed!</p>
+            <br>
+            <h3>Booking Details:</h3>
+            <table style="border-collapse: collapse; width: 100%;">
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Venue Name:</strong></td>
+                    <td style="padding: 8px;">PLP Palace Wedding Hall</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Location:</strong></td>
+                    <td style="padding: 8px;">Ananda Nagar</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Booking Date:</strong></td>
+                    <td style="padding: 8px;">2026-04-25</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Amount:</strong></td>
+                    <td style="padding: 8px;">₹85000</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Payment Status:</strong></td>
+                    <td style="padding: 8px;">COMPLETED</td>
+                </tr>
+            </table>
+            <br>
+            <p>Thank you for booking with us!</p>
+            <p>Best regards,<br>Smart Event Venue Booking Team</p>
+        </body>
+    </html>
+    
+
+======================================================================
+Timestamp: 2026-04-18 01:55:50
+Type: registration
+To: sathishkannappan1234@gmail.com
+Subject: Welcome to Smart Event Venue Booking System
+From: sathishak2234@gmail.com
+======================================================================
+
+    <html>
+        <body>
+            <h2>Welcome, Sakthi!</h2>
+            <p>Your account has been successfully created.</p>
+            <p><strong>Email:</strong> sathishkannappan1234@gmail.com</p>
+            <p>You can now login and start booking venues for your events.</p>
+            <br>
+            <p>Best regards,<br>Smart Event Venue Booking Team</p>
+        </body>
+    </html>
+    
+
+======================================================================
+Timestamp: 2026-04-18 01:56:39
+Type: booking
+To: sathishkannappan1234@gmail.com
+Subject: Booking Confirmed - SR Grand Mahal
+From: sathishak2234@gmail.com
+======================================================================
+
+    <html>
+        <body>
+            <h2>Booking Confirmation</h2>
+            <p>Dear Sakthi,</p>
+            <p>Your booking has been confirmed!</p>
+            <br>
+            <h3>Booking Details:</h3>
+            <table style="border-collapse: collapse; width: 100%;">
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Venue Name:</strong></td>
+                    <td style="padding: 8px;">SR Grand Mahal</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Location:</strong></td>
+                    <td style="padding: 8px;">Burma Colony</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Booking Date:</strong></td>
+                    <td style="padding: 8px;">2026-04-24</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Amount:</strong></td>
+                    <td style="padding: 8px;">₹75000</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Payment Status:</strong></td>
+                    <td style="padding: 8px;">COMPLETED</td>
+                </tr>
+            </table>
+            <br>
+            <p>Thank you for booking with us!</p>
+            <p>Best regards,<br>Smart Event Venue Booking Team</p>
+        </body>
+    </html>
+    
+
+======================================================================
+Timestamp: 2026-04-18 02:04:25
+Type: registration
+To: mailcheck_1776477862@example.com
+Subject: Welcome to Smart Event Venue Booking System
+From: sathishak2234@gmail.com
+======================================================================
+
+    <html>
+        <body>
+            <h2>Welcome, Mail Check!</h2>
+            <p>Your account has been successfully created.</p>
+            <p><strong>Email:</strong> mailcheck_1776477862@example.com</p>
+            <p>You can now login and start booking venues for your events.</p>
+            <br>
+            <p>Best regards,<br>Smart Event Venue Booking Team</p>
+        </body>
+    </html>
+    
+
+======================================================================
+Timestamp: 2026-04-18 02:04:29
+Type: booking
+To: mailcheck_1776477862@example.com
+Subject: Booking Confirmed - Sathguru Gnananandha Marriage Hall
+From: sathishak2234@gmail.com
+======================================================================
+
+    <html>
+        <body>
+            <h2>Booking Confirmation</h2>
+            <p>Dear Mail Check,</p>
+            <p>Your booking has been confirmed!</p>
+            <br>
+            <h3>Booking Details:</h3>
+            <table style="border-collapse: collapse; width: 100%;">
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Venue Name:</strong></td>
+                    <td style="padding: 8px;">Sathguru Gnananandha Marriage Hall</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Location:</strong></td>
+                    <td style="padding: 8px;">Sekkalai</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Booking Date:</strong></td>
+                    <td style="padding: 8px;">2026-12-29</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Amount:</strong></td>
+                    <td style="padding: 8px;">₹50000</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Payment Status:</strong></td>
+                    <td style="padding: 8px;">COMPLETED</td>
+                </tr>
+            </table>
+            <br>
+            <p>Thank you for booking with us!</p>
+            <p>Best regards,<br>Smart Event Venue Booking Team</p>
+        </body>
+    </html>
+    
+
+======================================================================
+Timestamp: 2026-04-21 11:20:23
+Type: booking
+To: sathishkannappan1234@gmail.com
+Subject: Booking Confirmed - Sathguru Gnananandha Marriage Hall
+From: sathishak2234@gmail.com
+======================================================================
+
+    <html>
+        <body>
+            <h2>Booking Confirmation</h2>
+            <p>Dear Sakthi,</p>
+            <p>Your booking has been confirmed!</p>
+            <br>
+            <h3>Booking Details:</h3>
+            <table style="border-collapse: collapse; width: 100%;">
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Venue Name:</strong></td>
+                    <td style="padding: 8px;">Sathguru Gnananandha Marriage Hall</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Location:</strong></td>
+                    <td style="padding: 8px;">Sekkalai</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Booking Date:</strong></td>
+                    <td style="padding: 8px;">2026-04-21 to 2026-04-21 (09:00 - 21:00)</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Amount:</strong></td>
+                    <td style="padding: 8px;">₹50000</td>
+                </tr>
+                <tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>Payment Status:</strong></td>
+                    <td style="padding: 8px;">COMPLETED</td>
+                </tr>
+            </table>
+            <br>
+            <p>Thank you for booking with us!</p>
+            <p>Best regards,<br>Smart Event Venue Booking Team</p>
+        </body>
+    </html>
+    

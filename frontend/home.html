@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Event Venue Booking — Karaikudi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --rose:    #c2185b;
+      --rose-lt: #f8bbd0;
+      --rose-pale: #fff0f6;
+      --gold:    #b8860b;
+      --gold-lt: #f5e6c0;
+      --cream:   #fdf8f0;
+      --ink:     #1a0a14;
+      --muted:   #8c7080;
+      --border:  #ecdde6;
+      --white:   #ffffff;
+      --radius:  18px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    /* ══════════════════════════════════════
+       FLOATING PETALS BACKGROUND
+    ══════════════════════════════════════ */
+    .petal-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .petal {
+      position: absolute;
+      top: -60px;
+      font-size: 1.4rem;
+      animation: petalFall linear infinite;
+      opacity: 0;
+      user-select: none;
+    }
+    @keyframes petalFall {
+      0%   { opacity: 0; transform: translateY(0) rotate(0deg) scale(.8); }
+      10%  { opacity: .7; }
+      90%  { opacity: .5; }
+      100% { opacity: 0; transform: translateY(110vh) rotate(360deg) scale(1.1); }
+    }
+
+    /* ══════════════════════════════════════
+       NAV
+    ══════════════════════════════════════ */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: rgba(253,248,240,.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 3rem;
+      height: 66px;
+      transition: box-shadow .3s;
+    }
+    nav.scrolled { box-shadow: 0 4px 24px rgba(194,24,91,.08); }
+
+    .brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--rose);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      letter-spacing: .01em;
+    }
+    .brand i { font-size: 1rem; }
+
+    .nav-links { display: flex; gap: .2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .87rem;
+      font-weight: 500;
+      padding: .4rem .9rem;
+      border-radius: 30px;
+      transition: all .2s;
+      letter-spacing: .03em;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--rose); background: var(--rose-pale); }
+    .nav-links a.logout { color: #b03060; }
+
+    /* ══════════════════════════════════════
+       HERO
+    ══════════════════════════════════════ */
+    .hero {
+      position: relative;
+      min-height: 94vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 70% 40%, #fce4ec 0%, transparent 55%),
+        radial-gradient(ellipse at 20% 80%, #fff8e1 0%, transparent 50%),
+        var(--cream);
+    }
+
+    /* decorative rings */
+    .ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(194,24,91,.12);
+      animation: pulsRing 4s ease-in-out infinite;
+    }
+    .ring-1 { width: 520px; height: 520px; right: -100px; top: 50%; transform: translateY(-50%); animation-delay: 0s; }
+    .ring-2 { width: 720px; height: 720px; right: -200px; top: 50%; transform: translateY(-50%); animation-delay: .8s; }
+    .ring-3 { width: 920px; height: 920px; right: -300px; top: 50%; transform: translateY(-50%); animation-delay: 1.6s; }
+    @keyframes pulsRing {
+      0%, 100% { opacity: .35; }
+      50%       { opacity: .08; }
+    }
+
+    /* mandala ornament */
+    .mandala {
+      position: absolute;
+      right: 6%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: min(480px, 45vw);
+      aspect-ratio: 1;
+      animation: rotateMandala 60s linear infinite;
+      opacity: .12;
+    }
+    @keyframes rotateMandala { to { transform: translateY(-50%) rotate(360deg); } }
+
+    /* hero image circle */
+    .hero-img-wrap {
+      position: absolute;
+      right: 6%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: min(420px, 42vw);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 6px solid rgba(194,24,91,.15);
+      box-shadow:
+        0 0 0 12px rgba(194,24,91,.06),
+        0 30px 80px rgba(194,24,91,.2);
+      animation: floatImg 6s ease-in-out infinite;
+    }
+    .hero-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    @keyframes floatImg {
+      0%, 100% { transform: translateY(-50%) translateY(0); }
+      50%       { transform: translateY(-50%) translateY(-18px); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 580px;
+      padding: 2rem 3rem;
+      animation: heroIn .9s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes heroIn {
+      from { opacity: 0; transform: translateX(-40px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      background: var(--rose-pale);
+      border: 1px solid var(--rose-lt);
+      border-radius: 30px;
+      padding: .35rem .9rem;
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--rose);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+      animation: heroIn .9s .1s both;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      line-height: 1.12;
+      color: var(--ink);
+      margin-bottom: 1.2rem;
+      animation: heroIn .9s .2s both;
+    }
+    .hero h1 em { color: var(--rose); font-style: italic; }
+
+    .hero p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 2rem;
+      animation: heroIn .9s .3s both;
+      font-weight: 300;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      animation: heroIn .9s .4s both;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--rose) 0%, #880e4f 100%);
+      color: #fff;
+      border: none;
+      padding: .85rem 2rem;
+      border-radius: 50px;
+      font-family: 'Jost', sans-serif;
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      box-shadow: 0 8px 28px rgba(194,24,91,.35);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(194,24,91,.4); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--rose);
+      border: 2px solid var(--rose-lt);
+      padding: .85rem 2rem;
+      border-radius: 50px;
+      font-family: 'Jost', sans-serif;
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      transition: all .2s;
+    }
+    .btn-outline:hover { background: var(--rose-pale); border-color: var(--rose); }
+
+    /* ══════════════════════════════════════
+       STATS STRIP
+    ══════════════════════════════════════ */
+    .stats-strip {
+      background: linear-gradient(135deg, #880e4f 0%, var(--rose) 50%, #ad1457 100%);
+      padding: 2.5rem 3rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      position: relative;
+      z-index: 2;
+    }
+    .stats-strip::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .stat-item { text-align: center; position: relative; }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+    }
+    .stat-label { font-size: .82rem; color: rgba(255,255,255,.65); margin-top: .3rem; letter-spacing: .06em; text-transform: uppercase; }
+    .stat-icon { font-size: 1.2rem; color: rgba(255,255,255,.5); margin-bottom: .5rem; }
+
+    /* ══════════════════════════════════════
+       VENUE COUNT ALERT
+    ══════════════════════════════════════ */
+    .venue-alert {
+      background: linear-gradient(90deg, var(--rose-pale), #fff8f0, var(--rose-pale));
+      border: 1px solid var(--rose-lt);
+      border-radius: 50px;
+      padding: .85rem 2rem;
+      text-align: center;
+      font-size: .92rem;
+      font-weight: 500;
+      color: var(--rose);
+      margin: 2.5rem auto;
+      max-width: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      animation: pulse 3s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(194,24,91,.15); }
+      50%      { box-shadow: 0 0 0 8px rgba(194,24,91,0); }
+    }
+
+    /* ══════════════════════════════════════
+       SECTION HEADINGS
+    ══════════════════════════════════════ */
+    .sec { padding: 5rem 3rem; }
+    .sec-head { text-align: center; margin-bottom: 3rem; }
+    .sec-tag {
+      display: inline-block;
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--rose);
+      background: var(--rose-pale);
+      border-radius: 30px;
+      padding: .3rem .9rem;
+      margin-bottom: .8rem;
+    }
+    .sec-head h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+    .sec-head h2 em { color: var(--rose); font-style: italic; }
+    .sec-head p { color: var(--muted); margin-top: .6rem; font-size: .95rem; font-weight: 300; }
+
+    /* ornamental divider */
+    .ornament {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .8rem;
+      margin: 1rem 0 0;
+      color: var(--rose-lt);
+      font-size: 1.1rem;
+    }
+    .ornament::before, .ornament::after {
+      content: '';
+      flex: 1;
+      max-width: 80px;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ══════════════════════════════════════
+       EVENT CATEGORIES
+    ══════════════════════════════════════ */
+    .categories { background: var(--white); }
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1.2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .cat-card {
+      background: var(--cream);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem 1rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all .3s cubic-bezier(.22,1,.36,1);
+      position: relative;
+      overflow: hidden;
+    }
+    .cat-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--rose), var(--gold));
+      transform: scaleX(0);
+      transition: transform .3s;
+    }
+    .cat-card:hover { border-color: var(--rose-lt); transform: translateY(-6px); box-shadow: 0 16px 40px rgba(194,24,91,.12); }
+    .cat-card:hover::before { transform: scaleX(1); }
+    .cat-icon { font-size: 2.2rem; margin-bottom: .8rem; display: block; }
+    .cat-name { font-size: .88rem; font-weight: 600; color: var(--ink); }
+
+    /* ══════════════════════════════════════
+       FEATURED VENUES GRID
+    ══════════════════════════════════════ */
+    .venues-section { background: var(--cream); }
+    .venues-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.8rem;
+    }
+
+    .venue-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 12px rgba(0,0,0,.04);
+      transition: transform .3s, box-shadow .3s;
+      cursor: pointer;
+      animation: cardIn .5s ease both;
+    }
+    .venue-card:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(194,24,91,.13); }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .venue-img {
+      position: relative;
+      height: 190px;
+      overflow: hidden;
+    }
+    .venue-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .5s;
+    }
+    .venue-card:hover .venue-img img { transform: scale(1.07); }
+
+    .venue-badge {
+      position: absolute;
+      top: 10px; right: 10px;
+      background: rgba(26,10,20,.75);
+      backdrop-filter: blur(6px);
+      color: #ffd700;
+      padding: .3rem .7rem;
+      border-radius: 30px;
+      font-size: .78rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: .3rem;
+    }
+
+    .venue-tag {
+      position: absolute;
+      top: 10px; left: 10px;
+      background: linear-gradient(135deg, var(--rose), #880e4f);
+      color: #fff;
+      padding: .25rem .7rem;
+      border-radius: 30px;
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+    }
+
+    .venue-info { padding: 1.2rem 1.3rem 1.4rem; }
+    .venue-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: .35rem;
+      color: var(--ink);
+    }
+    .venue-loc {
+      font-size: .82rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: .3rem;
+      margin-bottom: .75rem;
+    }
+    .venue-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: .8rem;
+      padding-top: .8rem;
+      border-top: 1px dashed var(--border);
+    }
+    .venue-price {
+      font-weight: 700;
+      color: var(--rose);
+      font-size: 1.05rem;
+    }
+    .venue-price small { font-size: .72rem; color: var(--muted); font-weight: 400; }
+    .venue-chips { display: flex; gap: .4rem; flex-wrap: wrap; }
+    .chip {
+      background: var(--rose-pale);
+      color: var(--rose);
+      border-radius: 20px;
+      padding: .18rem .55rem;
+      font-size: .7rem;
+      font-weight: 600;
+    }
+
+    /* loading skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, #f0e8ed 25%, #fdf0f5 50%, #f0e8ed 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 8px;
+    }
+    @keyframes shimmer { to { background-position: -200% 0; } }
+
+    /* ══════════════════════════════════════
+       LOCATION STRIP
+    ══════════════════════════════════════ */
+    .location-strip {
+      background: linear-gradient(135deg, #1a0a14 0%, #3d0022 100%);
+      padding: 4rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .location-strip::after {
+      content: '🌸';
+      position: absolute;
+      font-size: 12rem;
+      opacity: .04;
+      right: -2rem;
+      bottom: -3rem;
+      user-select: none;
+    }
+    .location-strip h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      color: var(--white);
+      margin-bottom: .8rem;
+    }
+    .location-strip h2 span { color: #f8bbd0; font-style: italic; }
+    .location-strip p { color: rgba(255,255,255,.5); font-size: .95rem; margin-bottom: 1.8rem; font-weight: 300; }
+
+    /* ══════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════ */
+    footer {
+      background: var(--ink);
+      color: rgba(255,255,255,.35);
+      text-align: center;
+      padding: 1.6rem;
+      font-size: .8rem;
+      letter-spacing: .04em;
+    }
+    footer span { color: var(--rose-lt); }
+
+    /* ══════════════════════════════════════
+       SCROLL REVEAL
+    ══════════════════════════════════════ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 1rem; }
+      .hero-img-wrap, .ring, .mandala { display: none; }
+      .hero-content { padding: 2rem 1.4rem; }
+      .stats-strip { grid-template-columns: repeat(2,1fr); padding: 2rem 1.2rem; }
+      .sec { padding: 3.5rem 1.4rem; }
+      .location-strip { padding: 3rem 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── FLOATING PETALS ──────────────────────────────────── -->
+<div class="petal-canvas" id="petalCanvas"></div>
+
+<!-- ── NAV ─────────────────────────────────────────────── -->
+<nav id="mainNav">
+  <a class="brand" href="profile.html">
+    <i class="fas fa-khanda"></i> Smart Venue Booking
+  </a>
+  <ul class="nav-links">
+    <li><a href="venues.html">Venues</a></li>
+    <li><a href="venue-map.html"><i class="fas fa-map-location-dot me-1"></i>Map</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="profile.html" class="active">Profile</a></li>
+    <li><a class="logout" href="#" onclick="logout()">Logout</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ─────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="ring ring-1"></div>
+  <div class="ring ring-2"></div>
+  <div class="ring ring-3"></div>
+
+  <!-- decorative mandala SVG -->
+  <svg class="mandala" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" stroke="#c2185b" stroke-width=".6">
+      <circle cx="100" cy="100" r="80"/><circle cx="100" cy="100" r="60"/><circle cx="100" cy="100" r="40"/>
+      <line x1="100" y1="20" x2="100" y2="180"/><line x1="20" y1="100" x2="180" y2="100"/>
+      <line x1="43" y1="43" x2="157" y2="157"/><line x1="157" y1="43" x2="43" y2="157"/>
+      <path d="M100,20 Q140,60 100,100 Q60,60 100,20"/>
+      <path d="M100,180 Q60,140 100,100 Q140,140 100,180"/>
+      <path d="M20,100 Q60,60 100,100 Q60,140 20,100"/>
+      <path d="M180,100 Q140,140 100,100 Q140,60 180,100"/>
+      <circle cx="100" cy="100" r="10"/><circle cx="100" cy="20" r="5"/><circle cx="100" cy="180" r="5"/>
+      <circle cx="20" cy="100" r="5"/><circle cx="180" cy="100" r="5"/>
+    </g>
+  </svg>
+
+  <div class="hero-img-wrap">
+    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80" alt="Wedding Venue" />
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-tag">
+      <i class="fas fa-heart"></i> Karaikudi's #1 Wedding Platform
+    </div>
+    <h1>Your Dream<br /><em>Wedding Venue</em><br />Awaits</h1>
+    <p>Discover handpicked marriage halls, mandapams & banquet spaces in Karaikudi — where every celebration becomes a cherished memory.</p>
+    <div class="hero-btns">
+      <a href="venues.html" class="btn-primary">
+        <i class="fas fa-search"></i> Explore Venues
+      </a>
+      <a href="venue-map.html" class="btn-outline">
+        <i class="fas fa-map-location-dot"></i> Map View
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS ─────────────────────────────────────────────── -->
+<div class="stats-strip reveal">
+  <div class="stat-item">
+    <div class="stat-icon"><i class="fas fa-building"></i></div>
+    <div class="stat-num" data-target="50">0</div>
+    <div class="stat-label">Venues Available</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-icon"><i class="fas fa-heart"></i></div>
+    <div class="stat-num" data-target="1000">0</div>
+    <div class="stat-label">Happy Couples</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+    <div class="stat-num" data-target="500">0</div>
+    <div class="stat-label">Events Hosted</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-icon"><i class="fas fa-star"></i></div>
+    <div class="stat-num" data-target="4">0</div>
+    <div class="stat-label">Avg Rating</div>
+  </div>
+</div>
+
+<!-- ── VENUE ALERT ───────────────────────────────────────── -->
+<div class="container-fluid px-4 reveal">
+  <div class="venue-alert">
+    <i class="fas fa-map-marker-alt"></i>
+    <strong id="totalVenuesCount">Loading…</strong>&nbsp;amazing venues available in Karaikudi
+  </div>
+</div>
+
+<!-- ── CATEGORIES ────────────────────────────────────────── -->
+<section class="sec categories reveal">
+  <div class="sec-head">
+    <div class="sec-tag">Browse by Event</div>
+    <h2>What Are You <em>Celebrating?</em></h2>
+    <div class="ornament">🌸</div>
+    <p>From grand weddings to intimate receptions — we have the perfect space.</p>
+  </div>
+  <div class="cat-grid">
+    <div class="cat-card"><span class="cat-icon">💍</span><div class="cat-name">Wedding</div></div>
+    <div class="cat-card"><span class="cat-icon">🎊</span><div class="cat-name">Reception</div></div>
+    <div class="cat-card"><span class="cat-icon">🪔</span><div class="cat-name">Engagement</div></div>
+    <div class="cat-card"><span class="cat-icon">🎂</span><div class="cat-name">Birthday</div></div>
+    <div class="cat-card"><span class="cat-icon">🏛️</span><div class="cat-name">Conference</div></div>
+    <div class="cat-card"><span class="cat-icon">🎉</span><div class="cat-name">Get-Together</div></div>
+  </div>
+</section>
+
+<!-- ── FEATURED VENUES ────────────────────────────────────── -->
+<section class="sec venues-section">
+  <div class="sec-head reveal">
+    <div class="sec-tag">Featured</div>
+    <h2>Top <em>Marriage Halls</em> in Karaikudi</h2>
+    <div class="ornament">💐</div>
+    <p>Curated spaces that make every moment magical.</p>
+  </div>
+  <div class="venues-grid" id="thumbnailsList">
+    <!-- JS-populated -->
+    <div class="venue-card">
+      <div class="venue-img"><div class="skeleton" style="height:190px;border-radius:0"></div></div>
+      <div class="venue-info">
+        <div class="skeleton" style="height:18px;margin-bottom:.5rem;width:70%"></div>
+        <div class="skeleton" style="height:13px;width:50%"></div>
+      </div>
+    </div>
+    <div class="venue-card">
+      <div class="venue-img"><div class="skeleton" style="height:190px;border-radius:0"></div></div>
+      <div class="venue-info">
+        <div class="skeleton" style="height:18px;margin-bottom:.5rem;width:60%"></div>
+        <div class="skeleton" style="height:13px;width:45%"></div>
+      </div>
+    </div>
+    <div class="venue-card">
+      <div class="venue-img"><div class="skeleton" style="height:190px;border-radius:0"></div></div>
+      <div class="venue-info">
+        <div class="skeleton" style="height:18px;margin-bottom:.5rem;width:75%"></div>
+        <div class="skeleton" style="height:13px;width:55%"></div>
+      </div>
+    </div>
+    <div class="venue-card">
+      <div class="venue-img"><div class="skeleton" style="height:190px;border-radius:0"></div></div>
+      <div class="venue-info">
+        <div class="skeleton" style="height:18px;margin-bottom:.5rem;width:65%"></div>
+        <div class="skeleton" style="height:13px;width:50%"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── LOCATION STRIP ─────────────────────────────────────── -->
+<div class="location-strip reveal">
+  <h2>All Venues Across <span>Karaikudi</span></h2>
+  <p>Click any venue to view it live on Google Maps.</p>
+  <a href="venues.html" class="btn-primary" style="display:inline-flex;">
+    <i class="fas fa-compass"></i> Explore All Venues
+  </a>
+</div>
+
+<!-- ── FOOTER ─────────────────────────────────────────────── -->
+<footer>
+  &copy; 2026 <span>Smart Event Venue Booking System</span>. All rights reserved.
+</footer>
+
+<!-- ── SCRIPTS ─────────────────────────────────────────────── -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="js/app.js"></script>
+<script>
+  /* ── FLOATING PETALS ──────────────────── */
+  const PETALS = ['🌸','🌺','🌹','💮','🏵️','✿'];
+  const canvas = document.getElementById('petalCanvas');
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.textContent = PETALS[Math.floor(Math.random() * PETALS.length)];
+    p.style.cssText = `
+      left: ${Math.random() * 100}vw;
+      font-size: ${.8 + Math.random() * .9}rem;
+      animation-duration: ${7 + Math.random() * 8}s;
+      animation-delay: ${Math.random() * 10}s;
+    `;
+    canvas.appendChild(p);
+  }
+
+  /* ── NAV SCROLL ──────────────────────── */
+  window.addEventListener('scroll', () => {
+    document.getElementById('mainNav').classList.toggle('scrolled', scrollY > 40);
+  });
+
+  /* ── SCROLL REVEAL ───────────────────── */
+  const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); } });
+  }, { threshold: .12 });
+  document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+  /* ── COUNTER ANIMATION ───────────────── */
+  function animateCounter(el) {
+    const target = parseInt(el.dataset.target);
+    const suffix = target === 4 ? '.8' : '+';
+    const dur = 1800;
+    const start = performance.now();
+    function step(now) {
+      const p = Math.min((now - start) / dur, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.floor(ease * target) + (p === 1 ? suffix : '');
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  const cro = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.stat-num').forEach(animateCounter);
+        cro.unobserve(e.target);
+      }
+    });
+  }, { threshold: .3 });
+  document.querySelectorAll('.stats-strip').forEach(el => cro.observe(el));
+
+  /* ── VENUE THUMBNAILS ────────────────── */
+  async function loadVenueThumbnails() {
+    try {
+      const response = await apiCall('/venues/');
+      const grid = document.getElementById('thumbnailsList');
+      const countEl = document.getElementById('totalVenuesCount');
+      if (!response.venues || response.venues.length === 0) {
+        grid.innerHTML = '<p style="text-align:center;color:var(--muted);grid-column:1/-1">No venues available.</p>';
+        return;
+      }
+      countEl.textContent = response.venues.length;
+      grid.innerHTML = '';
+      response.venues.forEach((venue, i) => {
+        const img = venue.thumbnail_url || venue.image_url ||
+          'https://via.placeholder.com/300x200?text=' + encodeURIComponent(venue.venue_name);
+        const rating = (venue.rating || 4.0).toFixed(1);
+        const mapsLink = `https://www.google.com/maps/search/${encodeURIComponent(venue.venue_name + ' ' + venue.location)}`;
+        const card = document.createElement('div');
+        card.className = 'venue-card';
+        card.style.animationDelay = (i * .07) + 's';
+        card.innerHTML = `
+          <div class="venue-img">
+            <img src="${img}" alt="${venue.venue_name}"
+              onerror="this.src='https://via.placeholder.com/300x200?text=${encodeURIComponent(venue.venue_name)}'"/>
+            <div class="venue-badge"><i class="fas fa-star" style="color:#ffd700"></i> ${rating}</div>
+            <div class="venue-tag">Featured</div>
+          </div>
+          <div class="venue-info">
+            <div class="venue-name">${venue.venue_name}</div>
+            <div class="venue-loc"><i class="fas fa-map-marker-alt"></i> ${venue.location || 'Karaikudi'}</div>
+            <div class="venue-chips">
+              <span class="chip">${venue.capacity} guests</span>
+              ${venue.isAC ? '<span class="chip">❄️ AC</span>' : ''}
+            </div>
+            <div class="venue-meta">
+              <div class="venue-price">₹${formatPrice(venue.price)}<br/><small>per day</small></div>
+              <a href="${mapsLink}" target="_blank"
+                style="font-size:.78rem;color:var(--rose);text-decoration:none;display:flex;align-items:center;gap:.3rem;">
+                <i class="fas fa-map-location-dot"></i> Map
+              </a>
+            </div>
+          </div>
+        `;
+        card.addEventListener('click', () => viewVenueDetails(venue.id));
+        grid.appendChild(card);
+      });
+    } catch (err) {
+      console.error(err);
+      document.getElementById('thumbnailsList').innerHTML =
+        '<p style="text-align:center;color:#e07070;grid-column:1/-1">Failed to load venues.</p>';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', loadVenueThumbnails);
+
+  function logout() {
+    localStorage.clear();
+    window.location.href = 'login.html';
+  }
+</script>
+</body>
+</html>

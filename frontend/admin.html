@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Console - Smart Event Venue Booking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #f4f7fb;
+            --panel: #ffffff;
+            --border: #d8e1ee;
+            --ink: #11203a;
+            --muted: #66778f;
+            --accent: #0d6efd;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .topbar {
+            background: linear-gradient(135deg, #0d6efd, #4f46e5);
+            color: #fff;
+            padding: 0.95rem 1.2rem;
+            box-shadow: 0 8px 24px rgba(17, 32, 58, 0.2);
+        }
+
+        .overview-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.95rem 1rem;
+            box-shadow: 0 4px 14px rgba(17, 32, 58, 0.06);
+        }
+
+        .overview-card .label {
+            font-size: 0.76rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.2rem;
+        }
+
+        .overview-card .value {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .admin-section {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 4px 16px rgba(17, 32, 58, 0.06);
+        }
+
+        .table thead th {
+            font-size: 0.79rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--muted);
+        }
+
+        .table td {
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+
+        .nav-pills .nav-link {
+            border-radius: 10px;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .nav-pills .nav-link.active {
+            background: var(--accent);
+        }
+
+        .small-muted {
+            font-size: 0.82rem;
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="topbar d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="h5 m-0"><i class="fas fa-user-shield me-2"></i>Admin Console</h1>
+            <div class="small-muted text-white-50">Manage users, vendors, venues, bookings, and notifications</div>
+        </div>
+        <div>
+            <a class="btn btn-light btn-sm" href="venues.html"><i class="fas fa-eye me-1"></i>View Site</a>
+            <button class="btn btn-outline-light btn-sm" onclick="adminLogout()"><i class="fas fa-right-from-bracket me-1"></i>Logout</button>
+        </div>
+    </div>
+
+    <main class="container-fluid py-3">
+        <div class="row g-3 mb-2">
+            <div class="col-6 col-md-3"><div class="overview-card"><div class="label">Users</div><div class="value" id="ovUsers">0</div></div></div>
+            <div class="col-6 col-md-3"><div class="overview-card"><div class="label">Vendors</div><div class="value" id="ovVendors">0</div></div></div>
+            <div class="col-6 col-md-3"><div class="overview-card"><div class="label">Venues</div><div class="value" id="ovVenues">0</div></div></div>
+            <div class="col-6 col-md-3"><div class="overview-card"><div class="label">Bookings</div><div class="value" id="ovBookings">0</div></div></div>
+        </div>
+
+        <div class="admin-section">
+            <ul class="nav nav-pills mb-3" id="adminTabs" role="tablist">
+                <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tabVenues" type="button">Venues</button></li>
+                <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tabUsers" type="button">Users</button></li>
+                <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tabVendors" type="button">Vendors</button></li>
+                <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tabBookings" type="button">Bookings</button></li>
+                <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tabNotify" type="button">Notifications</button></li>
+            </ul>
+
+            <div id="adminAlert"></div>
+
+            <div class="tab-content">
+                <section class="tab-pane fade" id="tabVenues">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-3"><input id="venueName" class="form-control" placeholder="Venue name"></div>
+                        <div class="col-md-2"><input id="venueLocation" class="form-control" placeholder="Location"></div>
+                        <div class="col-md-2"><input id="venueCapacity" type="number" class="form-control" placeholder="Capacity"></div>
+                        <div class="col-md-2"><input id="venuePrice" type="number" class="form-control" placeholder="Price"></div>
+                        <div class="col-md-1"><input id="venueRating" type="number" step="0.1" min="1" max="5" class="form-control" placeholder="Rating"></div>
+                        <div class="col-md-2 d-grid"><button class="btn btn-primary" onclick="createVenue()">Add Venue</button></div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead><tr><th>ID</th><th>Name</th><th>Location</th><th>Capacity</th><th>Price</th><th>Rating</th><th>Action</th></tr></thead>
+                            <tbody id="venuesBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="tab-pane fade" id="tabUsers">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Bookings</th><th>Role</th><th>Action</th></tr></thead>
+                            <tbody id="usersBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="tab-pane fade" id="tabVendors">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-3"><input id="vendorName" class="form-control" placeholder="Vendor name"></div>
+                        <div class="col-md-3"><input id="vendorEmail" type="email" class="form-control" placeholder="Vendor email"></div>
+                        <div class="col-md-2"><input id="vendorPhone" class="form-control" placeholder="Phone"></div>
+                        <div class="col-md-2">
+                            <select id="vendorVenue" class="form-select"><option value="">Assign venue (optional)</option></select>
+                        </div>
+                        <div class="col-md-2 d-grid"><button class="btn btn-primary" onclick="createVendor()">Add Vendor</button></div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Venue</th><th>Status</th><th>Action</th></tr></thead>
+                            <tbody id="vendorsBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="tab-pane fade show active" id="tabBookings">
+                    <div class="small-muted mb-2">All user-booked venues are listed below.</div>
+                    <div class="d-flex justify-content-end mb-2">
+                        <button class="btn btn-outline-primary btn-sm" onclick="sendFeedbackRequests()">
+                            <i class="fas fa-envelope-open-text me-1"></i>Send Feedback Forms (Completed Events)
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead><tr><th>ID</th><th>User</th><th>Venue</th><th>Start</th><th>End</th><th>Time</th><th>Booking Status</th><th>Payment</th><th>Feedback Email</th><th>Save</th></tr></thead>
+                            <tbody id="bookingsBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="tab-pane fade" id="tabNotify">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-3">
+                            <label class="form-label small-muted">Target Audience</label>
+                            <select id="notifyTarget" class="form-select">
+                                <option value="users">Users</option>
+                                <option value="vendors">Vendors</option>
+                                <option value="all">Users + Vendors</option>
+                            </select>
+                        </div>
+                        <div class="col-md-9">
+                            <label class="form-label small-muted">Subject</label>
+                            <input id="notifySubject" class="form-control" placeholder="Notification subject">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small-muted">Message</label>
+                            <textarea id="notifyMessage" class="form-control" rows="4" placeholder="Write the message to send by admin..."></textarea>
+                        </div>
+                        <div class="col-12 d-grid d-md-flex justify-content-md-end">
+                            <button class="btn btn-primary" onclick="sendNotification()"><i class="fas fa-paper-plane me-2"></i>Send Notification</button>
+                        </div>
+                    </div>
+
+                    <h6 class="mt-3">Notification Logs</h6>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead><tr><th>When</th><th>Target</th><th>Recipient</th><th>Subject</th><th>Status</th></tr></thead>
+                            <tbody id="notifyLogsBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_BASE_URL = (window.API_BASE_URL || localStorage.getItem('apiBaseUrl') || 'http://localhost:5000/api').replace(/\/$/, '');
+
+        function adminLogout() {
+            localStorage.removeItem('adminAuthToken');
+            localStorage.removeItem('currentAdminUser');
+            window.location.href = 'admin-login.html';
+        }
+
+        function getAdminToken() {
+            return localStorage.getItem('adminAuthToken');
+        }
+
+        function showAlert(message, type = 'info') {
+            document.getElementById('adminAlert').innerHTML = `<div class="alert alert-${type} mb-3">${message}</div>`;
+            setTimeout(() => {
+                document.getElementById('adminAlert').innerHTML = '';
+            }, 3200);
+        }
+
+        async function adminApi(endpoint, method = 'GET', payload = null) {
+            const token = getAdminToken();
+            if (!token) {
+                window.location.href = 'admin-login.html';
+                return null;
+            }
+
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: payload ? JSON.stringify(payload) : null
+            });
+
+            const result = await response.json();
+            if (!response.ok) {
+                if (response.status === 401 || response.status === 403) {
+                    adminLogout();
+                    return null;
+                }
+                throw new Error(result.error || result.message || 'Request failed');
+            }
+            return result;
+        }
+
+        async function loadVenues() {
+            const data = await adminApi('/admin/venues');
+            if (!data) return;
+            document.getElementById('ovVenues').textContent = data.venues.length;
+
+            const body = document.getElementById('venuesBody');
+            body.innerHTML = data.venues.map(v => `
+                <tr>
+                    <td>${v.id}</td>
+                    <td>${v.venue_name}</td>
+                    <td>${v.location}</td>
+                    <td>${v.capacity}</td>
+                    <td>Rs ${v.price}</td>
+                    <td>${Number(v.rating || 0).toFixed(1)}</td>
+                    <td><button class="btn btn-sm btn-outline-danger" onclick="deleteVenue(${v.id})">Delete</button></td>
+                </tr>
+            `).join('');
+
+            const venueSelect = document.getElementById('vendorVenue');
+            venueSelect.innerHTML = '<option value="">Assign venue (optional)</option>' + data.venues
+                .map(v => `<option value="${v.id}">${v.venue_name}</option>`)
+                .join('');
+        }
+
+        async function createVenue() {
+            try {
+                const payload = {
+                    venue_name: document.getElementById('venueName').value.trim(),
+                    location: document.getElementById('venueLocation').value.trim(),
+                    capacity: Number(document.getElementById('venueCapacity').value),
+                    price: Number(document.getElementById('venuePrice').value),
+                    rating: Number(document.getElementById('venueRating').value || 4),
+                    isAC: 0
+                };
+
+                if (!payload.venue_name || !payload.location || !payload.capacity || !payload.price) {
+                    showAlert('Venue name, location, capacity, and price are required.', 'warning');
+                    return;
+                }
+
+                await adminApi('/admin/venues', 'POST', payload);
+                showAlert('Venue added successfully.', 'success');
+                ['venueName', 'venueLocation', 'venueCapacity', 'venuePrice', 'venueRating'].forEach(id => document.getElementById(id).value = '');
+                await loadVenues();
+            } catch (error) {
+                showAlert(error.message, 'danger');
+            }
+        }
+
+        async function deleteVenue(id) {
+            if (!confirm('Delete this venue?')) return;
+            try {
+                await adminApi(`/admin/venues/${id}`, 'DELETE');
+                showAlert('Venue deleted.', 'success');
+                await loadVenues();
+            } catch (error) {
+                showAlert(error.message, 'danger');
+            }
+        }
+
+        async function loadUsers() {
+            const data = await adminApi('/admin/users');
+            if (!data) return;
+            document.getElementById('ovUsers').textContent = data.total_users;
+
+            const body = document.getElementById('usersBody');
+            body.innerHTML = data.users.map(u => `
+                <tr>
+                    <td>${u.id}</td>
+                    <td>${u.name || '-'}</td>
+                    <td>${u.email}</td>
+                    <td>${u.phone || '-'}</td>
+                    <td>${u.bookings}</td>
+                    <td>${u.is_admin ? '<span class="badge bg-primary">Admin</span>' : '<span class="badge bg-secondary">User</span>'}</td>
+                    <td>${u.is_admin ? '-' : `<button class="btn btn-sm btn-outline-danger" onclick="deleteUser(${u.id})">Delete</button>`}</td>
+                </tr>
+            `).join('');
+        }
+
+        async function deleteUser(id) {
+            if (!confirm('Delete this user account?')) return;
+            try {
+                await adminApi(`/admin/users/${id}`, 'DELETE');
+                showAlert('User deleted.', 'success');
+                await loadUsers();
+            } catch (error) {
+                showAlert(error.message, 'danger');
+            }
+        }
+
+        async function loadVendors() {
+            const data = await adminApi('/admin/vendors');
+            if (!data) return;
+            document.getElementById('ovVendors').textContent = data.vendors.length;
+
+            const body = document.getElementById('vendorsBody');
+            body.innerHTML = data.vendors.map(v => `
+                <tr>
+                    <td>${v.id}</td>
+                    <td>${v.name}</td>
+                    <td>${v.email}</td>
+                    <td>${v.phone || '-'}</td>
+                    <td>${v.venue_name || '-'}</td>
+                    <td>${v.is_active ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>'}</td>
+                    <td><button class="btn btn-sm btn-outline-danger" onclick="deleteVendor(${v.id})">Delete</button></td>
+                </tr>
+            `).join('');
+        }
+
+        async function createVendor() {
+            try {
+                const payload = {
+                    name: document.getElementById('vendorName').value.trim(),
+                    email: document.getElementById('vendorEmail').value.trim(),
+                    phone: document.getElementById('vendorPhone').value.trim(),
+                    venue_id: document.getElementById('vendorVenue').value ? Number(document.getElementById('vendorVenue').value) : null,
+                    is_active: 1
+                };
+
+                if (!payload.name || !payload.email) {
+                    showAlert('Vendor name and email are required.', 'warning');
+                    return;
+                }
+
+                await adminApi('/admin/vendors', 'POST', payload);
+                showAlert('Vendor added successfully.', 'success');
+                ['vendorName', 'vendorEmail', 'vendorPhone'].forEach(id => document.getElementById(id).value = '');
+                document.getElementById('vendorVenue').value = '';
+                await loadVendors();
+            } catch (error) {
+                showAlert(error.message, 'danger');
+            }
+        }
+
+        async function deleteVendor(id) {
+            if (!confirm('Delete this vendor?')) return;
+            try {
+                await adminApi(`/admin/vendors/${id}`, 'DELETE');
+                showAlert('Vendor deleted.', 'success');
+                await loadVendors();
+            } catch (error) {
+                showAlert(error.message, 'danger');
+            }
+        }
+
+        async function loadBookings() {
+            const data = await adminApi('/admin/bookings');
+            if (!data) return;
+            document.getElementById('ovBookings').textContent = data.bookings.length;
+
+            const body = document.getElementById('bookingsBody');
+            if (!data.bookings.length) {
+                body.innerHTML = '<tr><td colspan="10" class="text-center text-muted py-3">No user bookings found.</td></tr>';
+                return;
+            }
+
+            body.innerHTML = data.bookings.map(b => `
+                <tr>
+                    <td>${b.id}</td>
+                    <td>${b.user_name}<br><span class="small-muted">${b.user_email}</span></td>
+                    <td>${b.venue_name}</td>
+                    <td>${b.start_date}</td>
+                    <td>${b.end_date}</td>
+                    <td>${b.start_time} - ${b.end_time}</td>
+                    <td>
+                        <select id="bookingStatus_${b.id}" class="form-select form-select-sm">
+                            <option value="CONFIRMED" ${b.booking_status === 'CONFIRMED' ? 'selected' : ''}>CONFIRMED</option>
+                            <option value="PENDING" ${b.booking_status === 'PENDING' ? 'selected' : ''}>PENDING</option>
+                            <option value="CANCELLED" ${b.booking_status === 'CANCELLED' ? 'selected' : ''}>CANCELLED</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select id="paymentStatus_${b.id}" class="form-select form-select-sm">
+                            <option value="COMPLETED" ${b.payment_status === 'COMPLETED' ? 'selected' : ''}>COMPLETED</option>
+                            <option value="PENDING" ${b.payment_status === 'PENDING' ? 'selected' : ''}>PENDING</option>
+                            <option value="FAILED" ${b.payment_status === 'FAILED' ? 'selected' : ''}>FAILED</option>
+                        </select>
+                    </td>
+                    <td>
+                        <span class="badge ${b.feedback_request_status === 'SENT' ? 'bg-success' : (b.feedback_request_status === 'FAILED' ? 'bg-danger' : 'bg-secondary')}">
+                            ${b.feedback_request_status || 'PENDING'}
+                        </span>
+                        ${b.feedback_request_sent_at ? `<br><span class="small-muted">${new Date(b.feedback_request_sent_at).toLocaleString('en-IN')}</span>` : ''}
+                    </td>
+                    <td><button class="btn btn-sm btn-primary" onclick="updateBookingStatus(${b.id})">Save</button></td>
+                </tr>
+            `).join('');
+        }
+
+        async function sendFeedbackRequests() {
+            try {
+                const result = await adminApi('/admin/bookings/send-feedback-requests', 'POST', {});
+                showAlert(`Feedback forms sent: ${result.sent_count}, failed: ${result.failed_count}, skipped: ${result.skipped_count}`, 'success');
+                await loadBookings();
+            } catch (error) {
+                showAlert(error.message, 'danger');
+            }
+        }
+
+        async function updateBookingStatus(id) {
+            try {
+                await adminApi(`/admin/bookings/${id}/status`, 'PUT', {
+                    booking_status: document.getElementById(`bookingStatus_${id}`).value,
+                    payment_status: document.getElementById(`paymentStatus_${id}`).value
+                });
+                showAlert('Booking status updated.', 'success');
+            } catch (error) {
+                showAlert(error.message, 'danger');
+            }
+        }
+
+        async function sendNotification() {
+            try {
+                const payload = {
+                    target: document.getElementById('notifyTarget').value,
+                    subject: document.getElementById('notifySubject').value.trim(),
+                    message: document.getElementById('notifyMessage').value.trim(),
+                    send_email: true
+                };
+
+                if (!payload.subject || !payload.message) {
+                    showAlert('Subject and message are required for notifications.', 'warning');
+                    return;
+                }
+
+                const result = await adminApi('/admin/notifications/send', 'POST', payload);
+                showAlert(`Notification sent. Success: ${result.sent_count}, Failed: ${result.failed_count}`, 'success');
+                document.getElementById('notifySubject').value = '';
+                document.getElementById('notifyMessage').value = '';
+                await loadNotificationLogs();
+            } catch (error) {
+                showAlert(error.message, 'danger');
+            }
+        }
+
+        async function loadNotificationLogs() {
+            const data = await adminApi('/admin/notifications/logs?limit=100');
+            if (!data) return;
+
+            const body = document.getElementById('notifyLogsBody');
+            body.innerHTML = data.logs.map(log => `
+                <tr>
+                    <td>${new Date(log.created_at).toLocaleString('en-IN')}</td>
+                    <td>${log.target_type}</td>
+                    <td>${log.recipient_name || '-'}<br><span class="small-muted">${log.recipient_email}</span></td>
+                    <td>${log.subject}</td>
+                    <td><span class="badge ${log.email_status === 'SENT' ? 'bg-success' : (log.email_status === 'FAILED' ? 'bg-danger' : 'bg-secondary')}">${log.email_status}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        async function initializeAdminPanel() {
+            if (!getAdminToken()) {
+                window.location.href = 'admin-login.html';
+                return;
+            }
+
+            try {
+                await Promise.all([
+                    loadVenues(),
+                    loadUsers(),
+                    loadVendors(),
+                    loadBookings(),
+                    loadNotificationLogs()
+                ]);
+            } catch (error) {
+                showAlert(error.message, 'danger');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeAdminPanel);
+    </script>
+</body>
+</html>

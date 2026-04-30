@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Event Venue Booking - Login & Register</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="auth-page">
+    <div class="container-fluid">
+        <div class="row min-vh-100">
+            <!-- Left Side - Branding -->
+            <div class="col-lg-6 d-flex align-items-center justify-content-center bg-primary text-white p-5">
+                <div class="text-center">
+                    <h1 class="display-4 mb-4">Smart Event Venue Booking</h1>
+                    <p class="lead mb-5">Find and book the perfect venue for your events</p>
+                    <div class="features">
+                        <div class="mb-3">
+                            <i class="fas fa-calendar-check me-2"></i> Easy Booking
+                        </div>
+                        <div class="mb-3">
+                            <i class="fas fa-shield-alt me-2"></i> Secure Payments
+                        </div>
+                        <div class="mb-3">
+                            <i class="fas fa-envelope me-2"></i> Email Confirmations
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Forms -->
+            <div class="col-lg-6 d-flex align-items-center justify-content-center p-5">
+                <div class="auth-form-container">
+                    <!-- Login Form -->
+                    <div id="loginForm" class="auth-form">
+                        <h2 class="mb-4">Login</h2>
+                        <form id="loginFormElement">
+                            <div class="mb-3">
+                                <label for="loginEmail" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="loginEmail" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="loginPassword" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="loginPassword" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
+                        </form>
+                        <p class="text-center">
+                            Don't have an account? <a href="#" onclick="switchForm('register')">Register here</a>
+                        </p>
+                        <p class="text-center mb-0">
+                            <a href="admin-login.html">Admin Login</a>
+                        </p>
+                        <div id="loginMessage"></div>
+                    </div>
+
+                    <!-- Register Form -->
+                    <div id="registerForm" class="auth-form" style="display: none;">
+                        <h2 class="mb-4">Create Account</h2>
+                        <form id="registerFormElement">
+                            <div class="mb-3">
+                                <label for="registerName" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="registerName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="registerEmail" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="registerEmail" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="registerPhone" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="registerPhone">
+                            </div>
+                            <div class="mb-3">
+                                <label for="registerPassword" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="registerPassword" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="registerConfirmPassword" class="form-label">Confirm Password</label>
+                                <input type="password" class="form-control" id="registerConfirmPassword" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 mb-3">Register</button>
+                        </form>
+                        <p class="text-center">
+                            Already have an account? <a href="#" onclick="switchForm('login')">Login here</a>
+                        </p>
+                        <div id="registerMessage"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

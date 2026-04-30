@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Venue Details — Smart Event Venue Booking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --rose:        #d63384;
+      --rose-dk:     #a61e5c;
+      --rose-lt:     #f8c8de;
+      --rose-pale:   #fff5f9;
+      --rose-mid:    #fce4ef;
+      --gold:        #c9930a;
+      --gold-lt:     #fde68a;
+      --gold-pale:   #fffbeb;
+      --amber:       #f59e0b;
+      --cream:       #fefcf8;
+      --white:       #ffffff;
+      --ink:         #1e0a16;
+      --ink2:        #3d1f30;
+      --muted:       #8b6170;
+      --muted2:      #c4a0b0;
+      --border:      #f0d8e4;
+      --border2:     #e8ccd8;
+      --surface:     #fdf4f8;
+      --success:     #059669;
+      --radius-sm:   10px;
+      --radius:      16px;
+      --radius-lg:   24px;
+      --shadow-sm:   0 2px 8px rgba(214,51,132,.07);
+      --shadow:      0 8px 32px rgba(214,51,132,.12);
+      --shadow-lg:   0 20px 64px rgba(214,51,132,.16);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ── PETAL CANVAS ─────────────────────────────────── */
+    .petal-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .petal {
+      position: absolute; top: -60px;
+      animation: petalFall linear infinite; opacity: 0;
+      filter: drop-shadow(0 2px 4px rgba(214,51,132,.15));
+    }
+    @keyframes petalFall {
+      0%   { opacity: 0; transform: translateY(0) rotate(0deg) scale(.7); }
+      8%   { opacity: .7; }
+      92%  { opacity: .3; }
+      100% { opacity: 0; transform: translateY(110vh) rotate(520deg) scale(1.2); }
+    }
+
+    /* ── NAV ──────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 300;
+      background: rgba(255,255,255,.95);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.5rem; height: 68px;
+      transition: box-shadow .3s, border-color .3s;
+    }
+    nav.scrolled {
+      box-shadow: 0 4px 32px rgba(214,51,132,.1);
+      border-color: var(--border2);
+    }
+
+    .brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem; font-weight: 700;
+      color: var(--rose); text-decoration: none;
+      display: flex; align-items: center; gap: .55rem;
+      letter-spacing: -.01em;
+    }
+    .brand-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--rose-dk), var(--rose));
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: .85rem;
+    }
+    .nav-links { display: flex; gap: .15rem; list-style: none; align-items: center; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none;
+      font-size: .86rem; font-weight: 500;
+      padding: .45rem 1rem; border-radius: 50px;
+      transition: all .2s; letter-spacing: .01em;
+      display: flex; align-items: center; gap: .35rem;
+    }
+    .nav-links a:hover { color: var(--rose); background: var(--rose-pale); }
+    .nav-links a.active { color: var(--rose); background: var(--rose-pale); }
+    .nav-links .logout-btn {
+      color: var(--rose-dk);
+      border: 1.5px solid var(--rose-lt);
+      margin-left: .4rem;
+    }
+    .nav-links .logout-btn:hover { background: var(--rose-mid); }
+
+    /* ── HERO ─────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 380px;
+      display: flex; align-items: flex-end;
+      overflow: hidden;
+      background:
+        linear-gradient(160deg,
+          rgba(100,10,55,.94) 0%,
+          rgba(166,30,92,.88) 40%,
+          rgba(201,147,10,.82) 100%),
+        url('https://images.unsplash.com/photo-1519167758481-83f29c2f7f6f?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+    }
+
+    /* animated light beams */
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        -48deg,
+        transparent 0px, transparent 28px,
+        rgba(255,255,255,.025) 28px, rgba(255,255,255,.025) 30px
+      );
+      animation: beamMove 10s linear infinite;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 80% 40%, rgba(201,147,10,.18) 0%, transparent 60%);
+    }
+    @keyframes beamMove { to { background-position: 120px 0; } }
+
+    /* floating orbs */
+    .hero-orb {
+      position: absolute; border-radius: 50%;
+      animation: orbFloat ease-in-out infinite;
+    }
+    .hero-orb-1 {
+      width: 340px; height: 340px;
+      right: 6%; top: 50%; transform: translate(0,-50%);
+      border: 1px solid rgba(255,255,255,.1);
+      animation-duration: 5s; animation-delay: 0s;
+    }
+    .hero-orb-2 {
+      width: 520px; height: 520px;
+      right: 6%; top: 50%; transform: translate(0,-50%);
+      border: 1px solid rgba(255,255,255,.06);
+      animation-duration: 7s; animation-delay: 1.2s;
+    }
+    .hero-orb-3 {
+      width: 160px; height: 160px;
+      right: 14%; top: 18%;
+      background: rgba(201,147,10,.08);
+      animation-duration: 6s; animation-delay: .5s;
+    }
+    @keyframes orbFloat {
+      0%,100% { transform: translate(0,-50%) scale(1); opacity: .4; }
+      50% { transform: translate(0,-50%) scale(1.04); opacity: .15; }
+    }
+
+    /* decorative mandala */
+    .mandala {
+      position: absolute; right: 3%; bottom: -80px;
+      width: 360px; height: 360px; opacity: .07;
+      animation: spin 50s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* floating photo cluster */
+    .hero-photos {
+      position: absolute; right: 5%; bottom: 20px;
+      display: flex; gap: 8px; align-items: flex-end;
+      z-index: 2; animation: heroPhotoIn .9s .3s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes heroPhotoIn { from{opacity:0;transform:translateX(30px)} to{opacity:1;transform:none} }
+    .hero-photo-card {
+      border-radius: 14px; overflow: hidden;
+      border: 2px solid rgba(255,255,255,.25);
+      box-shadow: 0 12px 40px rgba(0,0,0,.3);
+    }
+    .hero-photo-card img { display: block; object-fit: cover; }
+    .hp-main { width: 140px; height: 180px; }
+    .hp-sm1 { width: 90px; height: 110px; }
+    .hp-sm2 { width: 90px; height: 80px; }
+
+    .hero-content {
+      position: relative; z-index: 3;
+      padding: 2.5rem 2.5rem 3.5rem;
+      animation: heroIn .9s cubic-bezier(.22,1,.36,1) both;
+      max-width: 620px;
+    }
+    @keyframes heroIn { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:none} }
+
+    .hero-crumb {
+      font-size: .7rem; letter-spacing: .16em; text-transform: uppercase;
+      color: rgba(255,255,255,.5); margin-bottom: .75rem;
+      display: flex; align-items: center; gap: .45rem;
+    }
+    .hero-crumb a { color: rgba(255,255,255,.5); text-decoration: none; transition: color .2s; }
+    .hero-crumb a:hover { color: var(--gold-lt); }
+    .hero-crumb .sep { opacity: .35; }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: .45rem;
+      background: rgba(255,255,255,.12);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 50px; padding: .32rem 1rem;
+      font-size: .72rem; font-weight: 600;
+      color: var(--gold-lt); letter-spacing: .1em; text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .hero-content h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      font-weight: 700; color: #fff; line-height: 1.12;
+      margin-bottom: .5rem; letter-spacing: -.02em;
+    }
+    .hero-content h1 em { color: var(--gold-lt); font-style: italic; }
+    .hero-subtitle { color: rgba(255,255,255,.5); font-size: .93rem; font-weight: 300; }
+
+    /* hero stat pills */
+    .hero-stats {
+      display: flex; gap: .7rem; flex-wrap: wrap; margin-top: 1.4rem;
+    }
+    .hero-stat {
+      background: rgba(255,255,255,.1);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 50px;
+      padding: .35rem .9rem;
+      display: flex; align-items: center; gap: .4rem;
+      font-size: .78rem; font-weight: 500; color: rgba(255,255,255,.85);
+    }
+    .hero-stat i { color: var(--gold-lt); font-size: .75rem; }
+
+    /* ── MAIN LAYOUT ──────────────────────────────────── */
+    .page-wrapper {
+      max-width: 1120px; margin: 0 auto;
+      padding: 0 2rem 6rem;
+      position: relative; z-index: 2;
+    }
+
+    /* ── FLOATING CARD ────────────────────────────────── */
+    .main-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-lg);
+      margin-top: -60px;
+      animation: cardRise .7s .1s cubic-bezier(.22,1,.36,1) both;
+      overflow: hidden;
+    }
+    @keyframes cardRise { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:none} }
+
+    /* ── TOP STRIP ────────────────────────────────────── */
+    .top-strip {
+      background: linear-gradient(135deg, var(--rose-pale) 0%, var(--gold-pale) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 1.2rem 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
+    }
+
+    .top-strip-left { display: flex; align-items: center; gap: .75rem; }
+
+    .venue-type-badge {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: var(--white);
+      border: 1.5px solid var(--rose-lt);
+      color: var(--rose-dk);
+      border-radius: 50px; padding: .4rem 1rem;
+      font-size: .78rem; font-weight: 600; letter-spacing: .04em;
+      box-shadow: var(--shadow-sm);
+    }
+    .venue-avail {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: #ecfdf5; border: 1.5px solid #6ee7b7;
+      color: var(--success); border-radius: 50px;
+      padding: .4rem 1rem; font-size: .78rem; font-weight: 600;
+    }
+    .venue-avail .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--success);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.5);opacity:.6} }
+
+    .top-strip-right { display: flex; gap: .6rem; align-items: center; }
+
+    .btn-back {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: var(--white); color: var(--muted);
+      border: 1.5px solid var(--border2);
+      border-radius: 50px; padding: .55rem 1.3rem;
+      font-family: 'Inter', sans-serif; font-size: .84rem; font-weight: 500;
+      text-decoration: none; cursor: pointer;
+      transition: all .22s; box-shadow: var(--shadow-sm);
+    }
+    .btn-back:hover { background: var(--surface); color: var(--rose); border-color: var(--rose-lt); }
+
+    .btn-book {
+      display: inline-flex; align-items: center; gap: .55rem;
+      background: linear-gradient(135deg, var(--rose-dk) 0%, var(--rose) 60%, #e8538a 100%);
+      color: #fff; border: none; border-radius: 50px;
+      padding: .6rem 1.8rem;
+      font-family: 'Inter', sans-serif; font-size: .9rem; font-weight: 600;
+      cursor: pointer; letter-spacing: .02em;
+      box-shadow: 0 6px 24px rgba(214,51,132,.35);
+      transition: all .22s; position: relative; overflow: hidden;
+    }
+    .btn-book::before {
+      content: '';
+      position: absolute; top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.15), transparent);
+      transition: left .5s;
+    }
+    .btn-book:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(214,51,132,.45); }
+    .btn-book:hover::before { left: 100%; }
+
+    /* ── BODY ─────────────────────────────────────────── */
+    .card-body { padding: 2rem; }
+
+    /* loading */
+    .loading-wrap {
+      text-align: center; padding: 5rem 2rem;
+    }
+    .loader-icon {
+      width: 64px; height: 64px; margin: 0 auto 1.5rem;
+      border-radius: 50%;
+      border: 3px solid var(--rose-lt);
+      border-top-color: var(--rose);
+      animation: spin 1s linear infinite;
+    }
+    .loading-text {
+      color: var(--muted); font-size: .93rem; font-weight: 400;
+      animation: fadeText 2s ease-in-out infinite;
+    }
+    @keyframes fadeText { 0%,100%{opacity:.5} 50%{opacity:1} }
+
+    /* ── NEW LIST + ANIMATED HEADING BOX ─────────────── */
+    .heading-hero-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(120deg, #fff8fa 0%, #fff4e8 50%, #fff8fa 100%);
+      background-size: 220% 220%;
+      animation: boxFlow 8s ease infinite;
+    }
+    .heading-hero-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: .75rem;
+      flex-wrap: wrap;
+    }
+    .heading-hero-box h3 {
+      font-size: 1.1rem;
+      color: var(--rose-dk);
+      margin: 0;
+      font-weight: 800;
+      letter-spacing: .01em;
+    }
+    .heading-hero-box p {
+      margin: .45rem 0 0;
+      font-size: .84rem;
+      color: #8c7080;
+    }
+    .heading-rating-pill {
+      border: 1px solid #dfc18b;
+      border-radius: 30px;
+      padding: .32rem .8rem;
+      display: inline-flex;
+      gap: .35rem;
+      align-items: center;
+      font-size: .8rem;
+      font-weight: 700;
+      color: #8f1d3a;
+      background: #fffdf6;
+    }
+    .heading-rating-pill i { color: #c8942d; }
+
+    .map-cta-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .45rem;
+      text-decoration: none;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #2e7d55, #3f9569);
+      color: #fff;
+      border-radius: 12px;
+      padding: .68rem .85rem;
+      font-size: .85rem;
+      font-weight: 600;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .map-cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(46,125,85,.25);
+      color: #fff;
+    }
+
+    .section-heading-box {
+      position: relative;
+      overflow: hidden;
+      border-radius: 14px;
+      border: 1px solid #f0d5e2;
+      background: linear-gradient(125deg, #fff0f6, #ffeed8, #fff7f2);
+      background-size: 200% 200%;
+      padding: .9rem 1rem;
+      margin: 1.1rem 0 .8rem;
+      animation: boxFlow 7s ease infinite;
+    }
+    .section-heading-box::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, transparent 0%, rgba(255,255,255,.35) 45%, transparent 70%);
+      transform: translateX(-130%);
+      animation: boxShine 3.2s linear infinite;
+      pointer-events: none;
+    }
+    .section-heading-box-title {
+      font-size: .96rem;
+      font-weight: 800;
+      color: #7a2040;
+      letter-spacing: .02em;
+    }
+    .section-heading-box-subtitle {
+      margin-top: .25rem;
+      font-size: .78rem;
+      color: #8c7080;
+    }
+
+    .details-list-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: .6rem;
+      margin-bottom: .5rem;
+    }
+    .details-list-item {
+      background: #fff;
+      border: 1px solid #eddde6;
+      border-radius: 12px;
+      padding: .68rem .8rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .8rem;
+      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+    }
+    .details-list-item:hover {
+      transform: translateY(-1px);
+      border-color: #d9b5c7;
+      box-shadow: 0 8px 16px rgba(122,32,64,.08);
+    }
+    .details-list-item span {
+      font-size: .8rem;
+      color: #6f5b67;
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+    }
+    .details-list-item span i {
+      color: #9f2752;
+      width: 14px;
+      text-align: center;
+    }
+    .details-list-item strong {
+      font-size: .88rem;
+      color: #24101b;
+      text-align: right;
+      font-weight: 700;
+    }
+    .details-list-item.full-width {
+      grid-column: 1 / -1;
+      align-items: flex-start;
+      flex-direction: column;
+      gap: .3rem;
+    }
+    .details-list-item.full-width strong {
+      text-align: left;
+      line-height: 1.5;
+      color: #463343;
+      font-weight: 600;
+    }
+
+    .layout-note-box {
+      margin-top: 1rem;
+      border: 1px dashed #d8bdcc;
+      background: #fff7fb;
+      color: #8f1d3a;
+      border-radius: 11px;
+      padding: .65rem .8rem;
+      font-size: .78rem;
+      display: inline-flex;
+      gap: .45rem;
+      align-items: center;
+    }
+
+    @keyframes boxFlow {
+      0% { background-position: 0% 40%; }
+      50% { background-position: 100% 60%; }
+      100% { background-position: 0% 40%; }
+    }
+    @keyframes boxShine {
+      100% { transform: translateX(130%); }
+    }
+
+    /* ── GALLERY ──────────────────────────────────────── */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      grid-template-rows: 200px 180px;
+      gap: 10px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 2.5rem;
+      box-shadow: var(--shadow);
+    }
+    .gallery-grid .g-main { grid-row: 1 / 3; overflow: hidden; position: relative; }
+    .gallery-grid .g-sub { overflow: hidden; position: relative; }
+    .gallery-grid img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform .6s cubic-bezier(.22,1,.36,1);
+      display: block;
+    }
+    .gallery-grid .g-main::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(20,5,15,.3) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .gallery-grid img:hover { transform: scale(1.06); }
+    .gallery-more {
+      position: absolute; inset: 0;
+      background: rgba(30,10,22,.55);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: .3rem;
+      color: white; font-weight: 600; font-size: .9rem;
+      cursor: pointer; transition: background .2s;
+      backdrop-filter: blur(2px);
+    }
+    .gallery-more i { font-size: 1.5rem; opacity: .85; }
+    .gallery-more:hover { background: rgba(30,10,22,.7); }
+
+    /* ── SECTION TITLE ────────────────────────────────── */
+    .sec-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem; font-weight: 700;
+      color: var(--ink); margin-bottom: 1.1rem;
+      display: flex; align-items: center; gap: .65rem;
+      letter-spacing: -.01em;
+    }
+    .sec-title-icon {
+      width: 34px; height: 34px; border-radius: var(--radius-sm);
+      background: var(--rose-pale); color: var(--rose);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .85rem; flex-shrink: 0;
+    }
+    .sec-title::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(to right, var(--border), transparent);
+    }
+
+    /* ── INFO GRID ────────────────────────────────────── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+      gap: .9rem; margin-bottom: 2.5rem;
+    }
+    .info-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem 1.25rem;
+      display: flex; align-items: flex-start; gap: .9rem;
+      transition: all .25s;
+      position: relative; overflow: hidden;
+    }
+    .info-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: linear-gradient(to bottom, var(--rose), var(--amber));
+      border-radius: 2px 0 0 2px;
+      opacity: 0; transition: opacity .25s;
+    }
+    .info-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--border2); }
+    .info-card:hover::before { opacity: 1; }
+    .info-icon {
+      width: 42px; height: 42px; border-radius: var(--radius-sm);
+      background: var(--rose-pale);
+      color: var(--rose);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .95rem; flex-shrink: 0;
+      transition: background .25s;
+    }
+    .info-card:hover .info-icon { background: var(--rose-mid); }
+    .info-label {
+      font-size: .68rem; text-transform: uppercase; letter-spacing: .12em;
+      color: var(--muted2); margin-bottom: .25rem; font-weight: 500;
+    }
+    .info-val {
+      font-size: .97rem; font-weight: 600; color: var(--ink); line-height: 1.3;
+    }
+    .info-val.price {
+      color: var(--rose-dk);
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+    }
+    .info-val .small { font-size: .78rem; color: var(--muted); font-weight: 400; font-family: 'Inter', sans-serif; }
+
+    /* ── AMENITIES ────────────────────────────────────── */
+    .amenity-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+      gap: .65rem; margin-bottom: 2.5rem;
+    }
+    .amenity-item {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: .75rem 1rem;
+      display: flex; align-items: center; gap: .6rem;
+      font-size: .85rem; font-weight: 500; color: var(--ink2);
+      transition: all .2s; cursor: default;
+    }
+    .amenity-item i {
+      font-size: .85rem; color: var(--rose);
+      width: 20px; text-align: center; flex-shrink: 0;
+    }
+    .amenity-item:hover {
+      background: var(--rose-pale); border-color: var(--rose-lt);
+      color: var(--rose-dk); transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+    .amenity-item:hover i { color: var(--rose-dk); }
+
+    /* ── DESCRIPTION ──────────────────────────────────── */
+    .desc-box {
+      background: linear-gradient(135deg, var(--rose-pale) 0%, var(--gold-pale) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem 1.8rem;
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+    .desc-box::before {
+      content: '"';
+      position: absolute; top: .5rem; left: 1.2rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 5rem; color: var(--rose-lt);
+      line-height: 1;
+    }
+    .desc-text {
+      color: var(--ink2); font-size: .93rem; line-height: 1.75;
+      font-weight: 400; position: relative; z-index: 1;
+      padding-left: .5rem;
+    }
+
+    /* ── MAP ──────────────────────────────────────────── */
+    .map-box {
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      height: 240px;
+      background: linear-gradient(135deg, #fff5f9, #fffbeb);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: .8rem;
+      text-decoration: none;
+      margin-bottom: 2.5rem;
+      transition: all .25s;
+      position: relative;
+    }
+    .map-box:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--border2); }
+    .map-icon-wrap {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: var(--rose-pale); border: 2px solid var(--rose-lt);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; color: var(--rose);
+      animation: mapPulse 2.5s ease-in-out infinite;
+    }
+    @keyframes mapPulse {
+      0%,100%{box-shadow:0 0 0 0 rgba(214,51,132,.2)}
+      50%{box-shadow:0 0 0 12px rgba(214,51,132,0)}
+    }
+    .map-label { font-weight: 600; color: var(--rose); font-size: .93rem; }
+    .map-addr { font-size: .8rem; color: var(--muted); }
+    .map-arrow {
+      position: absolute; top: 1rem; right: 1rem;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--rose-pale); color: var(--rose);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .8rem;
+    }
+
+    /* ── PRICING BREAKDOWN ────────────────────────────── */
+    .pricing-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden; margin-bottom: 2.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .pricing-header {
+      background: linear-gradient(135deg, var(--rose-dk), var(--rose));
+      color: white; padding: 1.1rem 1.5rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .pricing-header h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem; font-weight: 700;
+    }
+    .pricing-header .price-big {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem; font-weight: 700;
+    }
+    .pricing-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: .85rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      font-size: .88rem;
+    }
+    .pricing-row:last-child { border-bottom: none; }
+    .pricing-row .p-label { color: var(--muted); }
+    .pricing-row .p-val { font-weight: 600; color: var(--ink); }
+    .pricing-row.total { background: var(--rose-pale); }
+    .pricing-row.total .p-label { color: var(--rose-dk); font-weight: 600; }
+    .pricing-row.total .p-val { color: var(--rose-dk); font-size: 1rem; }
+
+    /* ── TESTIMONIAL ──────────────────────────────────── */
+    .testimonials-row {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: .9rem; margin-bottom: 2.5rem;
+    }
+    .testimonial-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem 1.3rem;
+      transition: transform .2s;
+    }
+    .testimonial-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+    .t-stars { color: var(--amber); font-size: .9rem; margin-bottom: .5rem; letter-spacing: .05em; }
+    .t-text { font-size: .85rem; color: var(--ink2); line-height: 1.65; margin-bottom: .85rem; font-style: italic; }
+    .t-author { display: flex; align-items: center; gap: .6rem; }
+    .t-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--rose), var(--amber));
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: .75rem; font-weight: 700; flex-shrink: 0;
+    }
+    .t-name { font-size: .82rem; font-weight: 600; color: var(--ink); }
+    .t-date { font-size: .73rem; color: var(--muted2); }
+
+    /* ── CTA BOTTOM ───────────────────────────────────── */
+    .cta-box {
+      background: linear-gradient(135deg, var(--rose-dk) 0%, var(--rose) 60%, #d4708a 100%);
+      border-radius: var(--radius);
+      padding: 2.5rem 2rem;
+      text-align: center; position: relative; overflow: hidden;
+      margin-bottom: .5rem;
+    }
+    .cta-box::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='28' fill='none' stroke='rgba(255,255,255,.06)' stroke-width='1'/%3E%3C/svg%3E") 0 0 / 60px 60px;
+    }
+    .cta-ring-1 {
+      position: absolute; width: 260px; height: 260px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.08);
+      right: -60px; top: 50%; transform: translateY(-50%);
+    }
+    .cta-ring-2 {
+      position: absolute; width: 400px; height: 400px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.05);
+      right: -130px; top: 50%; transform: translateY(-50%);
+    }
+    .cta-icon {
+      width: 68px; height: 68px; border-radius: 50%;
+      background: rgba(255,255,255,.15);
+      border: 2px solid rgba(255,255,255,.25);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.2rem; font-size: 1.8rem;
+      backdrop-filter: blur(8px);
+    }
+    .cta-box h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem; font-weight: 700; color: white; margin-bottom: .5rem;
+      position: relative; z-index: 1;
+    }
+    .cta-box h3 em { font-style: italic; color: var(--gold-lt); }
+    .cta-box p {
+      color: rgba(255,255,255,.65); font-size: .9rem; margin-bottom: 1.6rem;
+      font-weight: 300; position: relative; z-index: 1;
+    }
+    .btn-cta {
+      display: inline-flex; align-items: center; gap: .6rem;
+      background: white; color: var(--rose-dk);
+      border: none; border-radius: 50px;
+      padding: .8rem 2.4rem;
+      font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700;
+      cursor: pointer; letter-spacing: .02em;
+      box-shadow: 0 8px 32px rgba(0,0,0,.2);
+      transition: all .25s; position: relative; z-index: 1;
+    }
+    .btn-cta:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 14px 44px rgba(0,0,0,.25); }
+
+    /* ── FOOTER TAGLINE ───────────────────────────────── */
+    .footer-note {
+      text-align: center; padding: 1.5rem 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .footer-note p { color: var(--muted2); font-size: .82rem; font-weight: 400; }
+    .footer-note strong { color: var(--rose); font-weight: 600; }
+
+    /* ── REVEAL ───────────────────────────────────────── */
+    .reveal {
+      opacity: 0; transform: translateY(20px);
+      transition: opacity .55s ease, transform .55s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: .1s; }
+    .reveal-delay-2 { transition-delay: .2s; }
+    .reveal-delay-3 { transition-delay: .3s; }
+
+    /* ── FOOTER ───────────────────────────────────────── */
+    footer {
+      background: var(--ink);
+      color: rgba(255,255,255,.28);
+      text-align: center; padding: 2rem;
+      font-size: .78rem; letter-spacing: .05em;
+    }
+    footer span { color: var(--rose-lt); }
+
+    /* ── RESPONSIVE ───────────────────────────────────── */
+    @media (max-width: 768px) {
+      nav { padding: 0 1rem; }
+      .hero-photos { display: none; }
+      .hero-content { padding: 1.5rem 1.2rem 3rem; }
+      .page-wrapper { padding: 0 .9rem 4rem; }
+      .main-card { margin-top: -36px; }
+      .top-strip { padding: .9rem 1.2rem; }
+      .card-body { padding: 1.2rem; }
+      .gallery-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: 200px 130px 130px;
+      }
+      .gallery-grid .g-main { grid-row: auto; }
+      .details-list-grid { grid-template-columns: 1fr; }
+      .details-list-item { flex-direction: column; align-items: flex-start; }
+      .details-list-item strong { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- PETALS -->
+<div class="petal-canvas" id="petalCanvas"></div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a class="brand" href="profile.html">
+    <div class="brand-icon"><i class="fas fa-khanda"></i></div>
+    Smart Venue Booking
+  </a>
+  <ul class="nav-links">
+    <li><a href="venues.html"><i class="fas fa-building"></i> Venues</a></li>
+    <li><a href="venue-map.html"><i class="fas fa-map-location-dot"></i> Map</a></li>
+    <li><a href="dashboard.html"><i class="fas fa-gauge-high"></i> Dashboard</a></li>
+    <li><a href="profile.html"><i class="fas fa-circle-user"></i> Profile</a></li>
+    <li><a class="logout-btn" href="#" onclick="logout()"><i class="fas fa-arrow-right-from-bracket"></i> Logout</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+
+  <!-- Mandala -->
+  <svg class="mandala" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" stroke="#fff" stroke-width=".6">
+      <circle cx="120" cy="120" r="108"/><circle cx="120" cy="120" r="86"/><circle cx="120" cy="120" r="64"/><circle cx="120" cy="120" r="42"/><circle cx="120" cy="120" r="20"/>
+      <line x1="120" y1="12" x2="120" y2="228"/><line x1="12" y1="120" x2="228" y2="120"/>
+      <line x1="43" y1="43" x2="197" y2="197"/><line x1="197" y1="43" x2="43" y2="197"/>
+      <path d="M120,12 Q170,66 120,120 Q70,66 120,12"/>
+      <path d="M120,228 Q70,174 120,120 Q170,174 120,228"/>
+      <path d="M12,120 Q66,70 120,120 Q66,170 12,120"/>
+      <path d="M228,120 Q174,170 120,120 Q174,70 228,120"/>
+      <path d="M43,43 Q96,70 120,120 Q70,96 43,43"/>
+      <path d="M197,43 Q174,96 120,120 Q144,70 197,43"/>
+      <circle cx="120" cy="12" r="5"/><circle cx="120" cy="228" r="5"/>
+      <circle cx="12" cy="120" r="5"/><circle cx="228" cy="120" r="5"/>
+      <circle cx="43"  cy="43"  r="4"/><circle cx="197" cy="43" r="4"/>
+      <circle cx="43"  cy="197" r="4"/><circle cx="197" cy="197" r="4"/>
+      <circle cx="120" cy="120" r="10"/>
+    </g>
+  </svg>
+
+  <!-- Floating photo cluster -->
+  <div class="hero-photos">
+    <div class="hero-photo-card hp-main">
+      <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=280&q=70" alt="venue main" />
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div class="hero-photo-card hp-sm1">
+        <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=180&q=70" alt="interior" />
+      </div>
+      <div class="hero-photo-card hp-sm2">
+        <img src="https://images.unsplash.com/photo-1478146059778-26028b07395a?auto=format&fit=crop&w=180&q=70" alt="decor" />
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-crumb">
+      <a href="profile.html">Home</a>
+      <span class="sep">/</span>
+      <a href="venues.html">Venues</a>
+      <span class="sep">/</span> Details
+    </div>
+    <div class="hero-badge">
+      <i class="fas fa-champagne-glasses"></i> Wedding Venue Profile
+    </div>
+    <h1 id="venueDetailsPageTitle">
+      <em>Grand</em> Venue Details
+    </h1>
+    <p class="hero-subtitle" id="venueDetailsPageSubtitle">Loading venue information…</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><i class="fas fa-shield-check"></i> Verified Venue</div>
+      <div class="hero-stat"><i class="fas fa-clock"></i> Instant Booking</div>
+      <div class="hero-stat"><i class="fas fa-map-pin"></i> Karaikudi</div>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<div class="page-wrapper">
+  <div class="main-card reveal">
+
+    <!-- Top Strip -->
+    <div class="top-strip">
+      <div class="top-strip-left">
+        <div class="venue-type-badge"><i class="fas fa-star"></i> Premium Venue</div>
+        <div class="venue-avail">
+          <span class="dot"></span> Available for Booking
+        </div>
+      </div>
+      <div class="top-strip-right">
+        <a class="btn-back" href="venues.html">
+          <i class="fas fa-arrow-left"></i> All Venues
+        </a>
+        <button class="btn-book" onclick="proceedToBooking()">
+          <i class="fas fa-calendar-check"></i> Book This Venue
+        </button>
+      </div>
+    </div>
+
+    <!-- Card Body -->
+    <div class="card-body" id="venueDetailsPageContent">
+      <div class="loading-wrap">
+        <div class="loader-icon"></div>
+        <p class="loading-text">Fetching venue details…</p>
+      </div>
+    </div>
+
+    <!-- Footer Note -->
+    <div class="footer-note">
+      <p>All venues are <strong>verified & trusted</strong> by Smart Venue Booking — Karaikudi's premier event platform.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  &copy; 2026 <span>Smart Event Venue Booking System</span> &nbsp;·&nbsp; All rights reserved.
+</footer>
+
+<!-- SCRIPTS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="js/app.js"></script>
+<script>
+
+  /* ── PETALS ────────────────────────────────────────── */
+  const PETALS = ['🌸','🌺','🌹','💮','🌷','🌼'];
+  const canvas = document.getElementById('petalCanvas');
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.textContent = PETALS[Math.floor(Math.random() * PETALS.length)];
+    p.style.cssText = `
+      left:${Math.random()*100}vw;
+      font-size:${.65 + Math.random()*.9}rem;
+      animation-duration:${9 + Math.random()*9}s;
+      animation-delay:${Math.random()*14}s;
+    `;
+    canvas.appendChild(p);
+  }
+
+  /* ── STICKY NAV ────────────────────────────────────── */
+  window.addEventListener('scroll', () => {
+    document.getElementById('mainNav').classList.toggle('scrolled', scrollY > 40);
+  });
+
+  /* ── SCROLL REVEAL ─────────────────────────────────── */
+  const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); }
+    });
+  }, { threshold: .08 });
+  document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+  /* Re-observe after dynamic content injection */
+  const mo = new MutationObserver(() => {
+    document.querySelectorAll('.reveal:not(.visible)').forEach(el => ro.observe(el));
+  });
+  mo.observe(document.getElementById('venueDetailsPageContent'), { childList: true, subtree: true });
+
+  /* ── RENDER VENUE DETAILS ──────────────────────────── */
+  function renderVenueDetails(venue) {
+    const el = document.getElementById('venueDetailsPageContent');
+
+    const titleEl = document.getElementById('venueDetailsPageTitle');
+    if (titleEl) titleEl.innerHTML = `<em>${venue.venue_name || 'Venue'}</em> Details`;
+    const subEl = document.getElementById('venueDetailsPageSubtitle');
+    if (subEl) subEl.textContent = venue.location || 'Karaikudi';
+
+    const rating = parseFloat(venue.rating || 4.2).toFixed(1);
+    const ratingNum = Math.round(parseFloat(rating));
+    const stars = '★'.repeat(ratingNum) + '☆'.repeat(5 - ratingNum);
+    const mapsQuery = [venue.venue_name, venue.location, venue.address]
+      .filter(v => v !== null && v !== undefined && String(v).trim())
+      .map(v => String(v).trim())
+      .join(', ');
+    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapsQuery || 'Karaikudi, Tamil Nadu')}`;
+    const imgSrc = venue.image_url || venue.thumbnail_url ||
+      'https://images.unsplash.com/photo-1519167758481-83f29c2f7f6f?auto=format&fit=crop&w=900&q=80';
+    const priceStr = typeof formatPrice === 'function' ? formatPrice(venue.price) : ('₹' + (venue.price || '—'));
+
+    el.innerHTML = `
+
+      <!-- Gallery -->
+      <div class="gallery-grid reveal">
+        <div class="g-main">
+          <img src="${imgSrc}" alt="${venue.venue_name}"
+            onerror="this.src='https://via.placeholder.com/900x500?text=${encodeURIComponent(venue.venue_name||'Venue')}'"/>
+        </div>
+        <div class="g-sub">
+          <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=500&q=75" alt="interior"/>
+        </div>
+        <div class="g-sub" style="position:relative;">
+          <img src="https://images.unsplash.com/photo-1478146059778-26028b07395a?w=500&q=75" alt="decor"/>
+          <div class="gallery-more" onclick="alert('Full gallery coming soon!')">
+            <i class="fas fa-images"></i>
+            <span>+8 Photos</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Grid -->
+      <h3 class="sec-title reveal">
+        <span class="sec-title-icon"><i class="fas fa-circle-info"></i></span>
+        Venue Information
+      </h3>
+      <div class="info-grid reveal reveal-delay-1">
+        <div class="info-card">
+          <div class="info-icon"><i class="fas fa-building-columns"></i></div>
+          <div>
+            <div class="info-label">Venue Name</div>
+            <div class="info-val">${venue.venue_name || '—'}</div>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-icon"><i class="fas fa-location-dot"></i></div>
+          <div>
+            <div class="info-label">Location</div>
+            <div class="info-val">${venue.location || 'Karaikudi'}</div>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-icon"><i class="fas fa-users-line"></i></div>
+          <div>
+            <div class="info-label">Max Capacity</div>
+            <div class="info-val">${venue.capacity || '—'} <span class="small">guests</span></div>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-icon"><i class="fas fa-indian-rupee-sign"></i></div>
+          <div>
+            <div class="info-label">Price / Day</div>
+            <div class="info-val price">${priceStr}</div>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-icon"><i class="fas fa-star-half-stroke"></i></div>
+          <div>
+            <div class="info-label">Guest Rating</div>
+            <div class="info-val">
+              <span style="color:#f59e0b;font-size:.9rem;letter-spacing:.08em">${stars}</span>
+              <span class="small"> ${rating} / 5</span>
+            </div>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-icon"><i class="fas fa-temperature-half"></i></div>
+          <div>
+            <div class="info-label">Climate</div>
+            <div class="info-val">${venue.isAC ? '❄ Air Conditioned' : '🌿 Open / Non-AC'}</div>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-icon"><i class="fas fa-calendar-days"></i></div>
+          <div>
+            <div class="info-label">Availability</div>
+            <div class="info-val" style="color:var(--success)">● Open for Dates</div>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-icon"><i class="fas fa-phone-volume"></i></div>
+          <div>
+            <div class="info-label">Contact</div>
+            <div class="info-val">${venue.phone || '+91 98765 43210'}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <h3 class="sec-title reveal">
+        <span class="sec-title-icon"><i class="fas fa-feather-pointed"></i></span>
+        About the Venue
+      </h3>
+      <div class="desc-box reveal reveal-delay-1">
+        <p class="desc-text">
+          ${venue.description || `${venue.venue_name || 'This magnificent venue'} in ${venue.location || 'Karaikudi'} stands as one of the most sought-after celebration spaces in the region. Set in elegant surroundings and equipped with modern amenities, it offers the perfect blend of tradition and luxury for your most cherished occasions — from grand weddings and receptions to intimate family gatherings and corporate milestones. The space accommodates up to ${venue.capacity || 'hundreds of'} guests and ensures a seamless, memorable experience with dedicated in-house support.`}
+        </p>
+      </div>
+
+      <!-- Amenities -->
+      <h3 class="sec-title reveal">
+        <span class="sec-title-icon"><i class="fas fa-gem"></i></span>
+        Amenities & Services
+      </h3>
+      <div class="amenity-grid reveal reveal-delay-1">
+        ${venue.isAC        ? '<div class="amenity-item"><i class="fas fa-snowflake"></i> Air Conditioning</div>' : ''}
+        ${venue.parking     ? '<div class="amenity-item"><i class="fas fa-square-parking"></i> Valet Parking</div>' : ''}
+        ${venue.catering    ? '<div class="amenity-item"><i class="fas fa-utensils"></i> In-house Catering</div>' : ''}
+        ${venue.decoration  ? '<div class="amenity-item"><i class="fas fa-wand-magic-sparkles"></i> Floral Decor</div>' : ''}
+        ${venue.music       ? '<div class="amenity-item"><i class="fas fa-music"></i> Sound System</div>' : ''}
+        ${venue.photography ? '<div class="amenity-item"><i class="fas fa-camera-retro"></i> Photography</div>' : ''}
+        <div class="amenity-item"><i class="fas fa-wifi"></i> Free Wi-Fi</div>
+        <div class="amenity-item"><i class="fas fa-restroom"></i> Modern Restrooms</div>
+        <div class="amenity-item"><i class="fas fa-shield-halved"></i> 24/7 Security</div>
+        <div class="amenity-item"><i class="fas fa-fire-burner"></i> Generator Backup</div>
+        <div class="amenity-item"><i class="fas fa-wheelchair"></i> Accessible Entry</div>
+        <div class="amenity-item"><i class="fas fa-baby-carriage"></i> Kids' Corner</div>
+      </div>
+
+      <!-- Pricing Breakdown -->
+      <h3 class="sec-title reveal">
+        <span class="sec-title-icon"><i class="fas fa-receipt"></i></span>
+        Pricing Breakdown
+      </h3>
+      <div class="pricing-box reveal reveal-delay-1">
+        <div class="pricing-header">
+          <h4>Venue Rental Package</h4>
+          <div class="price-big">${priceStr}<span style="font-size:.7rem;font-weight:400;opacity:.7"> /day</span></div>
+        </div>
+        <div class="pricing-row"><span class="p-label">Base Hall Rental</span><span class="p-val">${priceStr}</span></div>
+        <div class="pricing-row"><span class="p-label">Cleaning & Setup</span><span class="p-val">Included</span></div>
+        <div class="pricing-row"><span class="p-label">Security Staff</span><span class="p-val">Included</span></div>
+        <div class="pricing-row"><span class="p-label">Catering (optional)</span><span class="p-val">Custom Quote</span></div>
+        <div class="pricing-row"><span class="p-label">Photography (optional)</span><span class="p-val">From ₹15,000</span></div>
+        <div class="pricing-row total"><span class="p-label">Minimum Booking</span><span class="p-val">${priceStr} + taxes</span></div>
+      </div>
+
+      <!-- Map -->
+      <h3 class="sec-title reveal">
+        <span class="sec-title-icon"><i class="fas fa-map-location-dot"></i></span>
+        Find Us Here
+      </h3>
+      <a href="${mapsUrl}" target="_blank" class="map-box reveal reveal-delay-1">
+        <div class="map-arrow"><i class="fas fa-arrow-up-right-from-square"></i></div>
+        <div class="map-icon-wrap"><i class="fas fa-map-pin"></i></div>
+        <div class="map-label">Open in Google Maps</div>
+        <div class="map-addr">${venue.venue_name || ''}, ${venue.location || 'Karaikudi'}, Tamil Nadu</div>
+      </a>
+
+      <!-- Testimonials -->
+      <h3 class="sec-title reveal">
+        <span class="sec-title-icon"><i class="fas fa-comments"></i></span>
+        Guest Reviews
+      </h3>
+      <div class="testimonials-row reveal reveal-delay-1">
+        <div class="testimonial-card">
+          <div class="t-stars">★★★★★</div>
+          <p class="t-text">"An absolutely stunning venue. The staff was impeccable and the space felt truly magical for our wedding day."</p>
+          <div class="t-author">
+            <div class="t-avatar">AP</div>
+            <div><div class="t-name">Anitha & Pradeep</div><div class="t-date">March 2025</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="t-stars">★★★★★</div>
+          <p class="t-text">"Every detail was taken care of. The catering was exquisite and the venue was pristine throughout the event."</p>
+          <div class="t-author">
+            <div class="t-avatar">SK</div>
+            <div><div class="t-name">Sundaram Krishnan</div><div class="t-date">Jan 2025</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="t-stars">★★★★☆</div>
+          <p class="t-text">"Spacious, well-lit, and beautifully decorated. Highly recommend for large family functions."</p>
+          <div class="t-author">
+            <div class="t-avatar">MP</div>
+            <div><div class="t-name">Meenakshi P.</div><div class="t-date">Nov 2024</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-box reveal">
+        <div class="cta-ring-1"></div>
+        <div class="cta-ring-2"></div>
+        <div class="cta-icon">💍</div>
+        <h3>Ready to Book <em>${venue.venue_name || 'this Venue'}?</em></h3>
+        <p>Secure your date today and craft a celebration that lasts a lifetime.</p>
+        <button class="btn-cta" onclick="proceedToBooking()">
+          <i class="fas fa-calendar-check"></i> Confirm My Booking
+        </button>
+      </div>
+    `;
+
+    el.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+  }
+
+  /* ── LOGOUT ─────────────────────────────────────────── */
+  function logout() {
+    localStorage.clear();
+    window.location.href = 'login.html';
+  }
+</script>
+</body>
+</html>

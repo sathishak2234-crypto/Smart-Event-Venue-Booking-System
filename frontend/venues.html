@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venues - Smart Event Venue Booking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Manrope:wght@400;500;700&display=swap');
+
+        :root {
+            --wedding-maroon: #8f1d3a;
+            --wedding-red: #c24052;
+            --wedding-gold: #c8942d;
+            --wedding-cream: #fff8ef;
+            --wedding-ink: #2f1c19;
+            --wedding-green: #2e8b57;
+        }
+
+        /* Venue Card Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .venue-card-animated {
+            animation: fadeInUp 0.6s ease-out forwards;
+            animation-fill-mode: both;
+        }
+
+        body {
+            font-family: 'Manrope', 'Segoe UI', sans-serif;
+            color: var(--wedding-ink);
+            background:
+                radial-gradient(circle at 10% -10%, rgba(200, 148, 45, 0.2), transparent 45%),
+                radial-gradient(circle at 90% -20%, rgba(194, 64, 82, 0.18), transparent 45%),
+                linear-gradient(180deg, #fffdf8 0%, #fff6ec 100%);
+        }
+
+        .filters {
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        .filters .form-range {
+            accent-color: #000;
+            height: 8px;
+            cursor: pointer;
+        }
+
+        .filters .form-range::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #000;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .filters .form-range::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #000;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .filters .form-label {
+            color: #000;
+            font-weight: 600;
+        }
+
+        .page-header {
+            animation: scaleIn 0.7s ease-out;
+            background:
+                linear-gradient(115deg, rgba(143, 29, 58, 0.95), rgba(194, 64, 82, 0.92), rgba(200, 148, 45, 0.9)),
+                url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=70') center/cover;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                -45deg,
+                rgba(255, 255, 255, 0.08),
+                rgba(255, 255, 255, 0.08) 14px,
+                transparent 14px,
+                transparent 28px
+            );
+            pointer-events: none;
+        }
+
+        .page-header .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header h1 {
+            font-family: 'Cinzel', serif;
+            font-weight: 800;
+            letter-spacing: 0.4px;
+        }
+
+        .page-header p {
+            opacity: 0.95;
+            font-size: 1.02rem;
+        }
+
+        .venue-card-animated:nth-child(1) { animation-delay: 0.05s; }
+        .venue-card-animated:nth-child(2) { animation-delay: 0.1s; }
+        .venue-card-animated:nth-child(3) { animation-delay: 0.15s; }
+        .venue-card-animated:nth-child(4) { animation-delay: 0.2s; }
+        .venue-card-animated:nth-child(5) { animation-delay: 0.25s; }
+        .venue-card-animated:nth-child(6) { animation-delay: 0.3s; }
+        .venue-card-animated:nth-child(n+7) { animation-delay: 0.35s; }
+
+        .venue-card {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 24px rgba(65, 30, 23, 0.14);
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(200, 148, 45, 0.25);
+            background: #ffffff;
+        }
+
+        .venue-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 18px 40px rgba(102, 35, 47, 0.25);
+        }
+
+        .venue-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+            background: linear-gradient(135deg, #b63b52 0%, #c8942d 100%);
+        }
+
+        .venue-card:hover img {
+            transform: scale(1.08);
+        }
+
+        .card-body {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .venue-name {
+            font-weight: 700;
+            color: var(--wedding-maroon);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .venue-location {
+            color: #a72b45;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+        }
+
+        .venue-location i {
+            color: #a72b45;
+            margin-right: 5px;
+        }
+
+        .venue-capacity {
+            color: var(--wedding-green);
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+        }
+
+        .venue-capacity i {
+            color: var(--wedding-green);
+            margin-right: 5px;
+        }
+
+        .venue-price {
+            font-weight: 600;
+            color: #8f1d3a;
+            font-size: 1.15rem;
+            margin-bottom: 10px;
+        }
+
+        .venue-facilities {
+            color: #6c5a57;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .venue-rating {
+            color: var(--wedding-gold);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .venue-rating i {
+            color: var(--wedding-gold);
+            margin-right: 5px;
+        }
+
+        .btn-view-details, .btn-book-venue {
+            font-weight: 600;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            flex-grow: 1;
+        }
+
+        .btn-view-details {
+            background-color: #7a2040;
+            border: none;
+            color: white;
+        }
+
+        .btn-view-details:hover {
+            background-color: #621633;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(122, 32, 64, 0.35);
+        }
+
+        .btn-book-venue {
+            background: linear-gradient(135deg, #be7f18 0%, #d7a345 100%);
+            border: none;
+            color: white;
+            margin-top: 8px;
+        }
+
+        .btn-book-venue:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(199, 139, 43, 0.45);
+        }
+
+        .venue-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #b7324d, #d58c2d);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .venue-badge-muted {
+            background: linear-gradient(135deg, #6f6f6f, #4e4e4e);
+        }
+
+        .venue-card {
+            position: relative;
+        }
+
+        /* Loading skeleton */
+        .venue-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Filter animation */
+        .filters input, .filters button {
+            transition: all 0.3s ease;
+        }
+
+        .filters button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(143, 29, 58, 0.28);
+        }
+
+        .price-filter-card {
+            background: linear-gradient(160deg, rgba(255, 255, 255, 0.95), rgba(255, 244, 226, 0.9)) !important;
+            border: 1px solid rgba(200, 148, 45, 0.35);
+            box-shadow: 0 6px 20px rgba(101, 41, 23, 0.1);
+        }
+
+        .venue-thumbnails {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .venue-thumb {
+            width: 76px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid rgba(200, 148, 45, 0.4);
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .venue-thumb:hover {
+            transform: translateY(-2px) scale(1.05);
+            border-color: var(--wedding-maroon);
+        }
+
+        #venueModal .modal-header {
+            background: linear-gradient(135deg, #7a203f, #c8942d) !important;
+            border-bottom: none;
+        }
+
+        #venueModal .modal-content {
+            border: 1px solid rgba(200, 148, 45, 0.5);
+            box-shadow: 0 24px 55px rgba(53, 17, 26, 0.3);
+        }
+
+        .no-venues-message {
+            text-align: center;
+            padding: 60px 20px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .no-venues-message i {
+            font-size: 4rem;
+            color: #bdc3c7;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .venue-card img {
+                height: 180px;
+            }
+
+            .venue-name {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(120deg, #6f1535, #a32f47);">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="profile.html">
+                <i class="fas fa-building me-2"></i> Smart Venue Booking
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="venues.html">Venues</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="venue-map.html"><i class="fas fa-map-location-dot me-1"></i>Map View</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile.html">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout()">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Title -->
+    <section class="page-header text-white py-5">
+        <div class="container">
+            <h1><i class="fas fa-star me-2"></i>All Available Venues</h1>
+            <p id="venueCount">Browse and select from our collection of 50+ premium venues</p>
+        </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="filters py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="text" class="form-control form-control-lg" id="searchVenueLocation" placeholder="Search by location" style="border-radius: 8px; border: 2px solid #ddd;">
+                </div>
+                <div class="col-md-8">
+                    <div class="price-filter-card p-4" style="background: #f5f5f5; border-radius: 12px;">
+                        <h6 style="font-weight: 700; color: #000; margin-bottom: 15px;">Price</h6>
+                        <div class="row mb-3" style="align-items: center;">
+                            <div class="col-4">
+                                <div style="display: flex; align-items: center; gap: 5px;">
+                                    <span style="font-size: 18px; color: #000;">₹</span>
+                                    <input type="text" id="minPriceValue" value="10000" readonly style="border: 1px solid #ddd; padding: 8px 12px; border-radius: 6px; font-weight: 600; background: white; width: 100%; text-align: center;">
+                                </div>
+                            </div>
+                            <div class="col-2" style="text-align: center;">
+                                <span style="color: #000; font-weight: 600;">to</span>
+                            </div>
+                            <div class="col-4">
+                                <div style="display: flex; align-items: center; gap: 5px;">
+                                    <span style="font-size: 18px; color: #000;">₹</span>
+                                    <input type="text" id="maxPriceValue" value="100000+" readonly style="border: 1px solid #ddd; padding: 8px 12px; border-radius: 6px; font-weight: 600; background: white; width: 100%; text-align: center;">
+                                </div>
+                            </div>
+                        </div>
+                        <input type="range" class="form-range w-100" id="priceSlider" min="10000" max="100000" value="100000" step="5000" oninput="updatePriceSlider()" style="accent-color: #22c55e; height: 8px; cursor: pointer; margin-bottom: 20px;">
+                        <style>
+                            #priceSlider::-webkit-slider-thumb { background: #22c55e; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+                            #priceSlider::-moz-range-thumb { background: #22c55e; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+                        </style>
+                        <button class="btn w-100" onclick="filterVenues()" style="background: #ff9500; color: white; font-weight: 700; padding: 12px; border-radius: 8px; border: none; font-size: 16px;">
+                            <i class="fas fa-search me-2"></i>Find Venues
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Venues List -->
+    <section class="venues-section py-5">
+        <div class="container">
+            <div class="row g-4" id="venuesList">
+                <!-- Venues will be loaded here by JavaScript -->
+            </div>
+            <div id="noVenuesFound" class="no-venues-message" style="display:none;">
+                <i class="fas fa-search"></i>
+                <h3>No Venues Found</h3>
+                <p>Try adjusting your filters</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Venue Details Modal -->
+    <div class="modal fade" id="venueModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="venueModalTitle"></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="venueDetails"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="proceedToBooking()"><i class="fas fa-calendar me-2"></i>Book Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p>&copy; 2026 Smart Event Venue Booking System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        // Load venues on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAllVenues();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venue Map - Smart Event Venue Booking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        #mapContainer {
+            height: 600px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .venue-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .venue-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+            border-color: #667eea;
+        }
+
+        .venue-card.active {
+            border: 2px solid #667eea;
+            background: #f0f2ff;
+        }
+
+        .venue-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            background: #e9ecef;
+        }
+
+        .venue-name {
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .venue-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 3px;
+        }
+
+        .venue-price {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-top: 8px;
+        }
+
+        .map-info-window {
+            font-family: Arial, sans-serif;
+            width: 280px;
+        }
+
+        .map-info-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .map-info-title {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .map-info-text {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 3px;
+        }
+
+        .map-info-price {
+            color: #667eea;
+            font-weight: 600;
+            margin-top: 8px;
+            font-size: 1rem;
+        }
+
+        .map-info-rating {
+            color: #ffc107;
+            font-size: 0.9rem;
+            margin: 5px 0;
+        }
+
+        .sidebar {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .filter-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .filter-label {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .location-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .capacity-badge {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+        }
+
+        .rating-stars {
+            color: #ffc107;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .map-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .control-buttons button {
+            flex-grow: 1;
+            min-width: 120px;
+        }
+
+        .venues-count {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .gm-style-iw-d {
+            overflow: visible !important;
+        }
+
+        .load-spinner {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .no-venues {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="profile.html">
+                <i class="fas fa-building me-2"></i> Smart Venue Booking
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="venues.html">All Venues</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="venue-map.html">
+                            <i class="fas fa-map-location-dot me-1"></i>Map View
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout()">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-5 mb-5">
+        <!-- Page Title -->
+        <div class="row mb-4">
+            <div class="col-lg-12">
+                <h1 class="display-5">
+                    <i class="fas fa-map-location-dot me-2" style="color: #667eea;"></i>
+                    Explore Venues on Map
+                </h1>
+                <p class="lead text-muted">Click on markers to see venue details and images</p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="row">
+            <!-- Map Section -->
+            <div class="col-lg-8">
+                <div class="map-section">
+                    <div id="mapContainer"></div>
+                </div>
+            </div>
+
+            <!-- Sidebar with Venues -->
+            <div class="col-lg-4">
+                <div class="sidebar">
+                    <!-- Filter Section -->
+                    <div class="filter-section">
+                        <div class="filter-label"><i class="fas fa-filter me-2"></i>Filter</div>
+                        <input type="text" id="searchInput" class="form-control form-control-sm mb-3" 
+                               placeholder="Search venue name...">
+                        
+                        <div class="filter-label mt-3">Price Range</div>
+                        <input type="range" id="priceRange" class="form-range" min="0" max="100000" step="1000">
+                        <small class="text-muted">Up to ₹<span id="priceValue">100000</span></small>
+
+                        <div class="control-buttons mt-3">
+                            <button class="btn btn-sm btn-outline-primary" onclick="resetFilters()">
+                                <i class="fas fa-redo me-1"></i>Reset
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Venues Count -->
+                    <div class="venues-count">
+                        <i class="fas fa-map-marker-alt me-2"></i>
+                        <span id="venueCount">0</span> Venues Found
+                    </div>
+
+                    <!-- Load Spinner -->
+                    <div class="load-spinner" id="loadSpinner">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p>Loading venues...</p>
+                    </div>
+
+                    <!-- Venues List -->
+                    <div id="venuesList"></div>
+
+                    <!-- No Venues Message -->
+                    <div class="no-venues" id="noVenues" style="display: none;">
+                        <i class="fas fa-search fa-3x mb-3"></i>
+                        <p>No venues found matching your criteria</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p>&copy; 2026 Smart Event Venue Booking System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="js/app.js"></script>
+    <!-- Google Maps API - commented out due to API key requirements. Map will show fallback view. -->
+    <script>
+        function initGoogleMaps() {
+            // Attempt to load Google Maps with callback
+            const script = document.createElement('script');
+            script.src = 'https://maps.googleapis.com/maps/api/js?callback=onMapsLoad&key=AIzaSyBi-dRH-q7DDLHbYO5N00KlklVu528n8-E';
+            script.async = true;
+            script.defer = true;
+            script.onerror = function() {
+                console.warn('Google Maps API failed to load. Using fallback view.');
+                showMapsFallback();
+            };
+            document.head.appendChild(script);
+        }
+
+        function onMapsLoad() {
+            console.log('Google Maps loaded successfully');
+            if (typeof initMap === 'function') {
+                initMap();
+            }
+        }
+
+        function showMapsFallback() {
+            const mapContainer = document.getElementById('mapContainer');
+            if (mapContainer) {
+                mapContainer.innerHTML = `
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Map View Unavailable</strong><br>
+                        The interactive map is currently unavailable. However, you can still browse all venues in the list below!
+                    </div>
+                `;
+                mapContainer.style.height = '120px';
+            }
+        }
+
+        // Load Maps API when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initGoogleMaps();
+        });
+    </script>
+
+    <script>
+        let map;
+        let markers = [];
+        let venues = [];
+        let infoWindows = [];
+        let activeMarker = null;
+        let mapsLoaded = false;
+
+        function onMapsLoad() {
+            console.log('Google Maps loaded successfully');
+            mapsLoaded = true;
+            if (typeof initMap === 'function') {
+                initMap();
+            }
+            if (venues.length > 0) {
+                createMapMarkers(venues);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadVenues();
+            setupFilters();
+        });
+
+        function initMap() {
+            if (!mapsLoaded || typeof google === 'undefined' || !google.maps) {
+                console.warn('Google Maps not available');
+                return;
+            }
+
+            // Default location: Karaikudi (center of Tamil Nadu)
+            const defaultLocation = { lat: 10.4591, lng: 78.1424 };
+
+            map = new google.maps.Map(document.getElementById('mapContainer'), {
+                zoom: 9,
+                center: defaultLocation,
+                mapTypeControl: true,
+                fullscreenControl: true,
+                zoomControl: true,
+                streetViewControl: false
+            });
+
+            // Add map style
+            map.setOptions({
+                mapTypeControlOptions: {
+                    mapTypeIds: ['roadmap', 'satellite', 'terrain', 'hybrid']
+                }
+            });
+        }
+
+        async function loadVenues() {
+            try {
+                document.getElementById('loadSpinner').style.display = 'block';
+                const response = await apiCall('/venues/');
+                venues = response.venues || [];
+                displayVenues(venues);
+                if (mapsLoaded) {
+                    createMapMarkers(venues);
+                }
+                document.getElementById('loadSpinner').style.display = 'none';
+            } catch (error) {
+                console.error('Error loading venues:', error);
+                document.getElementById('loadSpinner').style.display = 'none';
+                document.getElementById('venuesList').innerHTML = 
+                    '<div class="alert alert-danger">Failed to load venues</div>';
+            }
+        }
+
+        function createMapMarkers(venuesToMark) {
+            if (!mapsLoaded || !map || typeof google === 'undefined' || !google.maps) {
+                console.warn('Cannot create markers: Google Maps not available');
+                return;
+            }
+
+            // Clear existing markers
+            markers.forEach(marker => marker.setMap(null));
+            infoWindows.forEach(window => window.close());
+            markers = [];
+            infoWindows = [];
+
+            venuesToMark.forEach((venue, index) => {
+                const lat = venue.latitude || 10.4591;
+                const lng = venue.longitude || 78.1424;
+
+                // Create marker
+                const marker = new google.maps.Marker({
+                    position: { lat: parseFloat(lat), lng: parseFloat(lng) },
+                    map: map,
+                    title: venue.venue_name,
+                    icon: getMarkerIcon(index),
+                    animation: google.maps.Animation.DROP
+                });
+
+                // Create info window with image
+                const mainImage = venue.image_url || 
+                    `https://via.placeholder.com/280x180?text=${encodeURIComponent(venue.venue_name)}`;
+                const ratingStars = getStars(venue.rating || 4.0);
+
+                const infoWindowContent = `
+                    <div class="map-info-window">
+                        <img src="${mainImage}" alt="${venue.venue_name}" class="map-info-image" 
+                             onerror="this.src='https://via.placeholder.com/280x180?text=${encodeURIComponent(venue.venue_name)}'">
+                        <div class="map-info-title">${venue.venue_name}</div>
+                        <div class="map-info-text"><i class="fas fa-map-pin"></i> ${venue.location}</div>
+                        <div class="map-info-text"><i class="fas fa-users"></i> ${venue.capacity} people</div>
+                        <div class="map-info-rating">${ratingStars}</div>
+                        <div class="map-info-price"><i class="fas fa-rupee-sign"></i> ${formatPrice(venue.price)}</div>
+                        <button class="btn btn-sm btn-primary mt-2" onclick="viewVenueDetails(${venue.id})">
+                            View Details
+                        </button>
+                    </div>
+                `;
+
+                const infoWindow = new google.maps.InfoWindow({
+                    content: infoWindowContent,
+                    maxWidth: 300
+                });
+
+                // Add click listener to marker
+                marker.addListener('click', () => {
+                    // Close other windows
+                    infoWindows.forEach(iw => iw.close());
+                    infoWindow.open(map, marker);
+                    activeMarker = marker;
+                    
+                    // Highlight in sidebar
+                    highlightVenueInList(venue.id);
+                    
+                    // Pan to marker
+                    map.panTo(marker.getPosition());
+                });
+
+                markers.push(marker);
+                infoWindows.push(infoWindow);
+            });
+
+            // Fit map to show all markers
+            if (markers.length > 0) {
+                fitMapToMarkers();
+            }
+        }
+
+        function fitMapToMarkers() {
+            if (!map || !markers.length || typeof google === 'undefined' || !google.maps) return;
+            const bounds = new google.maps.LatLngBounds();
+            markers.forEach(marker => bounds.extend(marker.getPosition()));
+            map.fitBounds(bounds, 50);
+        }
+
+        function getMarkerIcon(index) {
+            const colors = ['FF6B6B', '4ECDC4', '45B7D1', 'FFA07A', '98D8C8', '667eea', '764ba2'];
+            const color = colors[index % colors.length];
+            return `http://maps.google.com/mapfiles/ms/icons/${color.toLowerCase()}-dot.png`;
+        }
+
+        function getStars(rating) {
+            const stars = Math.round(rating);
+            return '⭐'.repeat(stars) + ` ${rating.toFixed(1)}`;
+        }
+
+        function displayVenues(venuesToDisplay) {
+            const venuesList = document.getElementById('venuesList');
+            const venueCount = document.getElementById('venueCount');
+
+            venueCount.textContent = venuesToDisplay.length;
+
+            if (venuesToDisplay.length === 0) {
+                document.getElementById('noVenues').style.display = 'block';
+                venuesList.innerHTML = '';
+                return;
+            }
+
+            document.getElementById('noVenues').style.display = 'none';
+            venuesList.innerHTML = '';
+
+            venuesToDisplay.forEach(venue => {
+                const thumbnailImage = venue.thumbnail_url || 
+                    `https://via.placeholder.com/150x100?text=${encodeURIComponent(venue.venue_name)}`;
+                
+                const venue_card = document.createElement('div');
+                venue_card.className = 'venue-card';
+                venue_card.id = `venue-card-${venue.id}`;
+                venue_card.innerHTML = `
+                    <img src="${thumbnailImage}" alt="${venue.venue_name}" class="venue-image"
+                         onerror="this.src='https://via.placeholder.com/150x100?text=${encodeURIComponent(venue.venue_name)}'">
+                    <div class="venue-name">${venue.venue_name}</div>
+                    <div class="venue-info">
+                        <i class="fas fa-map-pin"></i> ${venue.location}
+                    </div>
+                    <div class="venue-info">
+                        <i class="fas fa-users"></i> ${venue.capacity} people
+                    </div>
+                    <div class="rating-stars">
+                        ${'⭐'.repeat(Math.round(venue.rating || 4))} ${(venue.rating || 4).toFixed(1)}
+                    </div>
+                    <div class="venue-price"><i class="fas fa-rupee-sign"></i> ${formatPrice(venue.price)}</div>
+                `;
+
+                venue_card.addEventListener('click', () => {
+                    highlightVenueInList(venue.id);
+                    triggerMarkerClick(venue.id);
+                });
+
+                venuesList.appendChild(venue_card);
+            });
+        }
+
+        function highlightVenueInList(venueId) {
+            // Remove active class from all cards
+            document.querySelectorAll('.venue-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Add active class to selected card
+            const card = document.getElementById(`venue-card-${venueId}`);
+            if (card) {
+                card.classList.add('active');
+                card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        function triggerMarkerClick(venueId) {
+            if (!mapsLoaded || !markers.length || typeof google === 'undefined' || !google.maps) {
+                console.warn('Cannot trigger marker click: Google Maps not available');
+                return;
+            }
+            const markerIndex = venues.findIndex(v => v.id === venueId);
+            if (markerIndex !== -1 && markers[markerIndex]) {
+                google.maps.event.trigger(markers[markerIndex], 'click');
+            }
+        }
+
+        function setupFilters() {
+            // Search filter
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', filterVenues);
+            }
+            
+            // Price range filter
+            const priceRange = document.getElementById('priceRange');
+            if (priceRange) {
+                priceRange.addEventListener('input', function() {
+                    const priceValue = document.getElementById('priceValue');
+                    if (priceValue) {
+                        priceValue.textContent = this.value;
+                    }
+                    filterVenues();
+                });
+            }
+        }
+
+        function filterVenues() {
+            const searchInput = document.getElementById('searchInput');
+            const priceRange = document.getElementById('priceRange');
+            
+            const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+            const maxPrice = priceRange ? parseInt(priceRange.value) : 100000;
+
+            const filtered = venues.filter(venue => {
+                const nameMatch = venue.venue_name.toLowerCase().includes(searchTerm) || 
+                                 venue.location.toLowerCase().includes(searchTerm);
+                const priceMatch = venue.price <= maxPrice;
+                return nameMatch && priceMatch;
+            });
+
+            displayVenues(filtered);
+            if (mapsLoaded) {
+                createMapMarkers(filtered);
+            }
+        }
+
+        function resetFilters() {
+            const searchInput = document.getElementById('searchInput');
+            const priceRange = document.getElementById('priceRange');
+            const priceValue = document.getElementById('priceValue');
+            
+            if (searchInput) searchInput.value = '';
+            if (priceRange) priceRange.value = '100000';
+            if (priceValue) priceValue.textContent = '100000';
+            
+            displayVenues(venues);
+            if (mapsLoaded) {
+                createMapMarkers(venues);
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
