@@ -1,0 +1,3 @@
+mysql
+locslhost(XAMPP)
+LOCALSTORAGE
