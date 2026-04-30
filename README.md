@@ -110,9 +110,22 @@ SECRET_KEY=your_secret_key
 
 ---
 
-## 📸 Screenshots
+## 📸 UI Screenshots
 
-*(Add screenshots here for better presentation)*
+### 🏠 Home Page
+![Home](image/home.png)
+
+### 🔐 Login Page
+![Login](image/login.png)
+
+### 🏢 Venue Listing
+![Venues](image/venues.png)
+
+### 📅 Booking Page
+![Booking](image/booking.png)
+
+### 📊 Admin Dashboard
+![Admin](image/admin.png)
 
 ---
 
